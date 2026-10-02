@@ -1,0 +1,933 @@
+#!/usr/bin/env node
+// LeafEarn Auto-Mine Bot — multi-account, zero-dependencies (Node.js 18+)
+// Game: Leaf Earn Bot (leafearn.site) — pick a gift, mine it step by step, claim real Telegram gifts.
+// Protocol: gRPC-web (leaf.v1.*) + x-init-data auth + x-app-rev/x-view-hint signing.
+//
+// CLI:
+//   node leafmine.js                     → interactive menu
+//   node leafmine.js add <name> <initData> [--gift BEAR|HEART|GIFT|ROCKET]
+//   node leafmine.js remove <name>
+//   node leafmine.js list
+//   node leafmine.js status              → health + per-account info
+//   node leafmine.js run [mine|claim|task|spin|verify|full] [--only a,b] [--force]
+//   node leafmine.js loop                → smart auto-loop (mine+claim+spin)
+//   node leafmine.js state               → cooldowns
+//   node leafmine.js help
+'use strict';
+
+const fs = require('fs');
+const path = require('path');
+const readline = require('readline');
+const { api } = require('./lib/leafapi');
+const { playGame, PLAYERS } = require('./lib/gamecore');
+
+const ROOT = __dirname;
+const CFG_DIR = path.join(ROOT, 'config');
+const ACC_DIR = path.join(CFG_DIR, 'accounts');
+const SETTINGS_FILE = path.join(CFG_DIR, 'settings.json');
+const STATE_FILE = path.join(CFG_DIR, 'state.json');
+const LOG_DIR = path.join(ROOT, 'logs');
+
+// Gift table (from the official frontend)
+const POINTS_PER_STEP = 12; // mined পয়েন্টে গোনে — প্রতি step = 12 pts, claim-ready = steps × 12
+const GIFTS = {
+  BEAR:   { id: 'BEAR',   name: 'Teddy Bear', stars: 15, cost_leaf: 0,     steps: 25, cooldown_ms: 2400000 },
+  HEART:  { id: 'HEART',  name: 'Heart',      stars: 15, cost_leaf: 0,     steps: 25, cooldown_ms: 2400000 },
+  GIFT:   { id: 'GIFT',   name: 'Gift Box',   stars: 25, cost_leaf: 5000,  steps: 20, cooldown_ms: 1800000 },
+  ROCKET: { id: 'ROCKET', name: 'Rocket',     stars: 50, cost_leaf: 15000, steps: 35, cooldown_ms: 1200000 },
+};
+const totalPoints = (g) => POINTS_PER_STEP * g.steps;
+
+// Claim-side messages surfaced by the server → human text (from frontend map)
+const CLAIM_ERRORS = {
+  not_in_group:   'আপনার Telegram গ্রুপে জয়েন করুন, তারপর আবার claim করুন।',
+  say_hi:         'সাপোর্ট অ্যাকাউন্টে একটা "Hi" পাঠান, তারপর আবার claim করুন।',
+  gift_failed:    'Telegram এই মুহূর্তে গিফট পাঠাতে পারেনি — পরে আবার চেষ্টা করুন।',
+  unavailable:    'এই গিফটটা Telegram-এ এখন স্টক আউট — পরে চেষ্টা করুন।',
+  not_configured: 'গিফট ডেলিভারি এখন অফলাইন — একটু পরে চেষ্টা করুন।',
+  'already claimed': 'এইটা আগেই claim করা হয়ে গেছে।',
+};
+
+const DEFAULT_SETTINGS = {
+  preferGift: 'BEAR',        // BEAR/HEART (ফ্রি) | GIFT (5000 leaf) | ROCKET (15000 leaf)
+  chainAfterClaim: true,     // claim-এর পরে সাথে সাথে নতুন গিফট pick
+  autoTask: true,            // full/loop চলার সময় task করবে
+  autoSpin: true,            // full/loop চলার সময় ফ্রি spin করবে
+  skipJoinTasks: true,       // TG join-task (channel/bot) skip — ম্যানুয়ালি করতে হয়
+  skipAdTasks: false,        // ad-view task skip করবে কিনা
+  parallel: 1,               // 1 = sequential
+  delayBetweenAccountsMs: 3000,
+  jitterSeconds: 25,
+  minCheckSeconds: 45,
+  taskCooldownHours: 0,      // 0 = off (task সাধারণত একবারই হয়)
+  // ad metrics যা mine/spin/adview-এ রিপোর্ট হয় (proto field name!)
+  ads: { ads_shown: 1, ads_clicked: 1, ads_offered: 1 },
+  utcOffsetHours: 3,
+  // games
+  gamesList: ['TIC_TAC_TOE', 'WORD_SEARCH', 'SNAKE', 'SHOOTER', 'BLOCK_BREAKER'],
+  shooterWaves: 6,
+  bbMaxLevel: 10,
+  snakeEatsMin: 8,
+  snakeEatsMax: 14,         // লগ টাইমজোন (বাগদাদ = +3)
+};
+
+// ── CLI colors ─────────────────────────────────────────────────────
+const C = {
+  reset: '\x1b[0m', bold: '\x1b[1m', dim: '\x1b[2m',
+  red: '\x1b[31m', green: '\x1b[32m', yellow: '\x1b[33m',
+  blue: '\x1b[34m', magenta: '\x1b[35m', cyan: '\x1b[36m',
+  bgGreen: '\x1b[42m', bgMagenta: '\x1b[45m',
+};
+const ok = (s) => `${C.green}✔${C.reset} ${s}`;
+const err = (s) => `${C.red}✘${C.reset} ${s}`;
+const info = (s) => `${C.cyan}ℹ${C.reset} ${s}`;
+const warn = (s) => `${C.yellow}⚠${C.reset} ${s}`;
+const banner = () => console.log(`\n${C.bgMagenta}${C.bold}  LEAF EARN MINER · MULTI  ${C.reset}`);
+
+// ── time helpers ───────────────────────────────────────────────────
+function loadSettings() {
+  if (!fs.existsSync(SETTINGS_FILE)) {
+    fs.mkdirSync(CFG_DIR, { recursive: true });
+    fs.writeFileSync(SETTINGS_FILE, JSON.stringify(DEFAULT_SETTINGS, null, 2));
+  }
+  return { ...DEFAULT_SETTINGS, ...JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8')) };
+}
+function saveSettings(s) { fs.writeFileSync(SETTINGS_FILE, JSON.stringify(s, null, 2)); }
+function tzNow() {
+  const s = loadSettings();
+  const d = new Date(Date.now() + (s.utcOffsetHours || 0) * 3600 * 1000);
+  return d.toISOString().slice(0, 19).replace('T', ' ');
+}
+function fmtMs(ms) {
+  if (!ms && ms !== 0) return '—';
+  const s = Math.max(0, Math.ceil(ms / 1000));
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), sec = s % 60;
+  return h > 0 ? `${h}h ${String(m).padStart(2, '0')}m` : `${m}m ${String(sec).padStart(2, '0')}s`;
+}
+function fmtAt(ms) {
+  if (!ms) return '—';
+  const s = loadSettings();
+  return new Date(Number(ms) + (s.utcOffsetHours || 0) * 3600 * 1000).toISOString().slice(11, 16);
+}
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// ── logging (per-account + all.log) ────────────────────────────────
+function getLogFile(name) {
+  fs.mkdirSync(LOG_DIR, { recursive: true });
+  return path.join(LOG_DIR, `${name}.log`);
+}
+function log(name, line, alsoConsole = true) {
+  const line2 = `[${tzNow()}] ${line.replace(/\x1b\[[0-9;]*m/g, '')}`;
+  fs.appendFileSync(getLogFile(name), line2 + '\n');
+  fs.appendFileSync(path.join(LOG_DIR, 'all.log'), `[${name}] ${line2}\n`);
+  if (alsoConsole) console.log(`[${tzNow()}] ${line}`);
+}
+
+// ── accounts / state ───────────────────────────────────────────────
+function ensureDirs() {
+  fs.mkdirSync(ACC_DIR, { recursive: true });
+  fs.mkdirSync(LOG_DIR, { recursive: true });
+}
+function loadAccounts(onlyEnabled = true) {
+  ensureDirs();
+  const accs = fs.readdirSync(ACC_DIR).filter((f) => f.endsWith('.json')).map((f) => {
+    try { return JSON.parse(fs.readFileSync(path.join(ACC_DIR, f), 'utf8')); } catch { return null; }
+  }).filter(Boolean);
+  return onlyEnabled ? accs.filter((a) => a.enabled !== false) : accs;
+}
+function saveAccount(acc) {
+  fs.writeFileSync(path.join(ACC_DIR, `${acc.name}.json`), JSON.stringify(acc, null, 2));
+}
+function deleteAccount(name) {
+  const p = path.join(ACC_DIR, `${name}.json`);
+  if (fs.existsSync(p)) fs.unlinkSync(p);
+}
+function loadState() {
+  if (!fs.existsSync(STATE_FILE)) return { accounts: {} };
+  try { return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8')); } catch { return { accounts: {} }; }
+}
+function saveState(s) { fs.writeFileSync(STATE_FILE, JSON.stringify(s, null, 2)); }
+function markCooldown(state, name, kind) {
+  if (!state.accounts) state.accounts = {};
+  if (!state.accounts[name]) state.accounts[name] = {};
+  state.accounts[name][kind] = new Date().toISOString();
+  saveState(state);
+}
+
+// ── auth (Init = normal login path, same as the webapp on load) ────
+const authed = new Set();
+async function ensureAuth(acc) {
+  if (authed.has(acc.name)) return true;
+  const r = await api.init(acc.initData, acc.start_param || '');
+  if (!r.ok) {
+    log(acc.name, err(`auth/init fail: ${r.code} ${r.message}`));
+    return false;
+  }
+  const u = r.data.user || {};
+  log(acc.name, ok(`auth ✓ ${u.username || u.first_name || '?'} · 🌿 ${u.leaf || 0} leaf · role=${u.role || '?'}` + (r.data.is_new ? ' (নতুন অ্যাকাউন্ট!)' : '')));
+  authed.add(acc.name);
+  return true;
+}
+
+// ── mine flow ──────────────────────────────────────────────────────
+function mineHeader(acc, st) {
+  const g = GIFTS[st.gift] || GIFTS.BEAR;
+  const need = totalPoints(g);
+  const taps = Math.floor((st.mined || 0) / POINTS_PER_STEP);
+  const stateStr = !st.has_cycle ? 'no-cycle' : (st.claimed ? 'done' : `pts ${st.mined || 0}/${need} · ${taps}/${g.steps} taps`);
+  console.log(`${C.bold}${C.magenta}── ${acc.name} ──${C.reset} ${C.green}🌿 ${st.balance || 0} leaf${C.reset} · ${C.cyan}🎁 ${g.name}${C.reset} ${C.dim}(${stateStr}, next ${fmtAt(st.next_mine_at_ms)})${C.reset}`);
+}
+
+async function mineTick(acc, s) {
+  if (!(await ensureAuth(acc))) return { ok: false, nextCheckSec: 300 };
+  let r = await api.mineStatus(acc.initData);
+  if (!r.ok) { log(acc.name, err(`mine status fail: ${r.code} ${r.message}`)); return { ok: false, nextCheckSec: 300 }; }
+  let st = r.data;
+  mineHeader(acc, st);
+
+  // 1) cycle না থাকলে (বা আগেরটা শেষ) নতুন গিফট pick
+  if (!st.has_cycle || st.claimed) {
+    if (st.claimed && !s.chainAfterClaim) {
+      log(acc.name, ok('cycle শেষ — chain off, নতুন pick করা হলো না'));
+      return { ok: true, action: 'DONE', nextCheckSec: 3600 };
+    }
+    const giftId = String(acc.prefer_gift || s.preferGift || 'BEAR').toUpperCase();
+    const g = GIFTS[giftId] || GIFTS.BEAR;
+    log(acc.name, info(`→ PICK ${g.name} (${giftId})`));
+    r = await api.minePick(acc.initData, giftId);
+    if (!r.ok) {
+      const hint = g.cost_leaf > 0 ? ` (এই গিফটের জন্য ${g.cost_leaf} leaf লাগে — ব্যালেন্স কম হলে BEAR/HEART দাও)` : '';
+      log(acc.name, err(`pick fail: ${r.code} ${r.message}${hint}`));
+      return { ok: false, nextCheckSec: 600 };
+    }
+    st = r.data;
+    log(acc.name, ok(`picked ${GIFTS[st.gift] ? GIFTS[st.gift].name : st.gift} · balance ${st.balance || 0}`));
+  }
+
+  const g = GIFTS[st.gift] || GIFTS.BEAR;
+  const need = totalPoints(g);
+
+  // 2) সব step মাইন হয়ে গেছে → CLAIM (mined = points; ready হয় steps × 12 এ)
+  if ((st.mined || 0) >= need) {
+    log(acc.name, info(`→ CLAIM (${g.name}, ${st.mined}/${need} pts)...`));
+    r = await api.mineClaim(acc.initData);
+    if (!r.ok) {
+      const human = CLAIM_ERRORS[r.message] || `${r.code} ${r.message}`;
+      log(acc.name, err(`claim fail: ${human}`));
+      return { ok: true, action: 'CLAIM_FAIL', nextCheckSec: 1800 };
+    }
+    st = r.data;
+    log(acc.name, ok(`🎉 CLAIM success! balance=${st.balance || 0} leaf`));
+    if (s.chainAfterClaim) {
+      await sleep(1200);
+      const giftId = String(acc.prefer_gift || s.preferGift || 'BEAR').toUpperCase();
+      const rr = await api.minePick(acc.initData, giftId);
+      if (rr.ok) { st = rr.data; log(acc.name, ok(`⛓ chain: নতুন গিফট pick → ${GIFTS[st.gift] ? GIFTS[st.gift].name : st.gift}`)); }
+    }
+    return { ok: true, action: 'CLAIM', nextCheckSec: 60 };
+  }
+
+  // 3) পরের step ready → MINE
+  const now = Date.now();
+  const wait = Number(st.next_mine_at_ms || 0) - now;
+  if (wait <= 0) {
+    const tap = Math.floor((st.mined || 0) / POINTS_PER_STEP) + 1;
+    log(acc.name, info(`→ MINE (tap ${tap}/${g.steps}) ...`));
+    // MINE_AD_V1 — ফ্রন্টএন্ড-হুবহু: showAdsgramAd(ad_block_id) → "done" হলে mine{adsShown, adsClicked, adsOffered}
+    const adsMod = require('./lib/adsgram');
+    let show = await adsMod.doAdShow(acc.initData, st.ad_block_id || '48006');
+    if (!show.ok) { await sleep(5000); show = await adsMod.doAdShow(acc.initData, st.ad_block_id || '48006'); }
+    if (!show.ok) {
+      log(acc.name, warn('mine: অ্যাড ফিল নেই (' + (show.noFill ? 'no fill' : (show.error || 'show fail')) + ') — ২ মিনিট পরে আবার'));
+      return { ok: false, nextCheckSec: 120 };
+    }
+    r = await api.mineDo(acc.initData, { ads_shown: 1, ads_clicked: 1, ads_offered: Math.max(1, show.offered || 1) });
+    if (!r.ok) {
+      if (r.grpcStatus === 8) { log(acc.name, warn('cooldown (RESOURCE_EXHAUSTED) — একটু পরে আবার')); return { ok: false, nextCheckSec: 300 }; }
+      if (r.message === 'no_ad') { log(acc.name, warn('সার্ভার বলছে ad লাগে — settings.ads এর মান দেখো')); return { ok: false, nextCheckSec: 600 }; }
+      log(acc.name, err(`mine fail: ${r.code} ${r.message}`));
+      return { ok: false, nextCheckSec: 600 };
+    }
+    st = r.data;
+    log(acc.name, ok(`mine ✓ +${st.gained || 0} pts (${st.divisor || 1} divisor) · ${st.mined || 0}/${need} pts · next ${fmtAt(st.next_mine_at_ms)}`));
+  } else {
+    log(acc.name, info(`⏳ পরের mine ${fmtMs(wait)} পরে (${fmtAt(st.next_mine_at_ms)})`));
+  }
+
+  const nextCheckSec = Math.max(s.minCheckSeconds || 45, Math.ceil((Number(st.next_mine_at_ms || 0) - Date.now()) / 1000) + 5);
+  return { ok: true, nextCheckSec };
+}
+
+async function flowClaim(acc, s) {
+  if (!(await ensureAuth(acc))) return;
+  const r0 = await api.mineStatus(acc.initData);
+  if (!r0.ok) return log(acc.name, err(`status fail: ${r0.code} ${r0.message}`));
+  const st = r0.data;
+  const g = GIFTS[st.gift] || GIFTS.BEAR;
+  if (!st.has_cycle) return log(acc.name, warn('কোনো cycle নেই — আগে mine/pick করো'));
+  if (!s.force && (st.mined || 0) < totalPoints(g)) {
+    return log(acc.name, warn(`claim ready না — ${st.mined || 0}/${totalPoints(g)} pts (force দিয়ে চেষ্টা করতে পারো)`));
+  }
+  const r = await api.mineClaim(acc.initData);
+  if (r.ok) log(acc.name, ok(`🎉 claim ✓ balance=${r.data.balance || 0} leaf`));
+  else log(acc.name, err(`claim fail: ${CLAIM_ERRORS[r.message] || `${r.code} ${r.message}`}`));
+}
+
+// ── tasks ──────────────────────────────────────────────────────────
+async function flowTask(acc, s) {
+  if (!(await ensureAuth(acc))) return { ok: 0, fail: 0, skip: 0 };
+  const r = await api.tasks(acc.initData);
+  if (!r.ok) { log(acc.name, err(`tasks fail: ${r.code} ${r.message}`)); return { ok: 0, fail: 0, skip: 0 }; }
+  const tasks = r.data.tasks || [];
+  const pending = tasks.filter((t) => !t.completed && !t.locked);
+  log(acc.name, info(`tasks: total=${tasks.length} pending=${pending.length}`));
+  let okN = 0, failN = 0, skipN = 0;
+  for (const t of pending) {
+    const type = String(t.type || '');
+    const isAd = (t.max_views || 0) > 0;
+    // TASK_V2: X/LINK/app-open টাস্কও চেষ্টা করো; শুধু চ্যানেল/গ্রুপ জয়েন (t.me/<name>, startapp ছাড়া) skipJoinTasks-এ বাদ
+    const url = String(t.action_url || '');
+    const isJoin = type === 'TELEGRAM' && /t\.me\//i.test(url) && !/startapp=|\/app\b|\?start=/i.test(url);
+    if (s.skipJoinTasks && isJoin && !isAd) { log(acc.name, warn(`skip join-task: "${t.title}" (${type}) — ম্যানুয়ালি জয়েন করো: ${url}`)); skipN++; continue; }
+    if (s.skipAdTasks && isAd) { log(acc.name, warn(`skip ad-task: "${t.title}"`)); skipN++; continue; }
+    try {
+      if (isAd) { // AD_TASK_DELEGATED — ADSGRAM/MONETAG/ADEXIUM সব flowAdcrack (run adwatch / run all / autopilot) সামলায়
+        log(acc.name, info('ad-task "' + t.title + '" (' + (t.views_used || 0) + '/' + t.max_views + ') → adwatch সামলাবে'));
+        skipN++;
+      } else {
+        log(acc.name, info(`task "${t.title}" (${type}) +${t.reward || 0} · try ${t.tries_used || 0}/${t.tries_required || 1}`));
+        await sleep(2500 + Math.random() * 2000);
+        const cr = await api.completeTask(acc.initData, t.id);
+        if (cr.ok && cr.data.ok) { log(acc.name, ok(`task ✓ +${cr.data.reward || 0} leaf`)); okN++; }
+        else {
+          const m = cr.ok ? (cr.data.status || 'not ok') : cr.message;
+          let hint = '';
+          if (type === 'BIO') hint = ' → Telegram bio-তে এই লাইনটা বসাও: 🍀 Best Earning Bot :- t.me/LeafEarnBot/app?startapp=' + (acc.tgId || acc.start_param || '');
+          else if (/join/i.test(m)) hint = ' → আগে জয়েন করো: ' + url;
+          else if (type === 'TELEGRAM' && url) hint = ' → ফোনে একবার খুলে দেখো: ' + url;
+          log(acc.name, warn(`task "${t.title}": ${m}${hint}`)); failN++;
+        }
+      }
+    } catch (e) {
+      log(acc.name, err(`task crash (skipped): ${e.message}`)); failN++;
+    }
+    await sleep(1500 + Math.random() * 1500);
+  }
+  log(acc.name, info(`task summary: ok=${okN} fail=${failN} skip=${skipN}`));
+  return { ok: okN, fail: failN, skip: skipN };
+}
+
+// ── spin (daily free spin, ad-gated) ───────────────────────────────
+async function flowSpin(acc, s) {
+  if (!(await ensureAuth(acc))) return;
+  const r = await api.spinStatus(acc.initData);
+  if (!r.ok) return log(acc.name, err(`spin status fail: ${r.code} ${r.message}`));
+  if (!r.data.can_spin) return log(acc.name, info(`spin এখন না — পরেরটা ${fmtMs(Number(r.data.next_spin_ms || 0))} পরে`));
+  log(acc.name, info('→ SPIN ...'));
+  await sleep(2500 + Math.random() * 2000);
+  // SPIN_AD_V1 — ফ্রন্টএন্ড: status.adBlockId → showAdsgramAd → spin{shown, clicked, offered}
+  const spinShow = await require('./lib/adsgram').doAdShow(acc.initData, r.data.ad_block_id || '48006');
+  if (!spinShow.ok) return log(acc.name, warn('spin: অ্যাড ফিল নেই — পরে আবার চেষ্টা হবে'));
+  const rr = await api.spin(acc.initData, { ads_shown: 1, ads_clicked: 1, ads_offered: Math.max(1, spinShow.offered || 1) });
+  if (rr.ok) log(acc.name, ok(`spin ✓ slice=${rr.data.slice_index} +${rr.data.reward || 0} leaf · balance=${rr.data.balance || 0} · পরের spin ${fmtMs(Number(rr.data.next_spin_ms || 0))} পরে`));
+  else if (rr.message === 'no_ad') log(acc.name, warn('spin-এর জন্য ad লাগে — সার্ভার রিজেক্ট করল'));
+  else log(acc.name, err(`spin fail: ${rr.code} ${rr.message}`));
+}
+
+// ── membership verify ──────────────────────────────────────────────
+async function flowVerify(acc) {
+  if (!(await ensureAuth(acc))) return;
+  const r = await api.membership(acc.initData);
+  if (!r.ok) return log(acc.name, err(`membership fail: ${r.code} ${r.message}`));
+  if (r.data.verified) return log(acc.name, ok('membership ✓ verified'));
+  log(acc.name, warn('membership verified না — এসব চ্যানেল/গ্রুপে জয়েন করো:'));
+  for (const c of r.data.chats || []) {
+    console.log(`   ${c.joined ? ok : warn} ${c.name} — ${c.url}`);
+  }
+}
+
+async function flowFull(acc, s) {
+  if (s.autoTask) await flowTask(acc, s);
+  if (s.autoSpin) await flowSpin(acc, s);
+  await mineTick(acc, s);
+}
+
+// ── games (auto-play all 5, then claim with ad) ────────────────────
+async function claimGameReward(acc, s, token, logPrefix) {
+  // frontend flow: startClaim → ad → claimRun
+  const sc = await api.claimStart(acc.initData, token);
+  if (!sc.ok) return log(acc.name, err(`${logPrefix} claim start fail: ${sc.code} ${sc.message}`));
+  const ads = s.ads || DEFAULT_SETTINGS.ads;
+  // simulate the Adsgram ad view so the provider records an impression
+  const blockId = sc.data.provider_ref || '';
+  if (blockId && s.simulateAds !== false) {
+    const { simulateAdView } = require('./lib/adsgram');
+    const ad = await simulateAdView(acc.initData, blockId, { clicked: true });
+    if (ad.ok) log(acc.name, info(`ad simulated ✓ (${ad.fired.join(' ')})`));
+    else log(acc.name, warn(`ad simulate হয়নি: ${ad.detail} — initData ফ্রেশ না হলে claim আটকাতে পারে`));
+  }
+  const r = await api.claimRun(acc.initData, { token, ...ads });
+  if (r.ok) log(acc.name, ok(`${logPrefix} 🎉 claimed +${r.data.reward || 0} leaf (base ${r.data.base || 0}, divisor ${r.data.divisor || 1}) · balance ${r.data.balance || 0}`));
+  else if (r.message === 'no_ad') log(acc.name, warn(`${logPrefix} reward pending — সার্ভার ad verify চাইছে, ওয়েবঅ্যাপে গিয়ে claim করো`));
+  else log(acc.name, err(`${logPrefix} claim fail: ${r.code} ${r.message}`));
+  return r;
+}
+
+async function flowGames(acc, s) {
+  if (!(await ensureAuth(acc))) return { ok: 0, fail: 0, skip: 0 };
+  const games = (s.gamesList || Object.keys(PLAYERS)).filter((g) => PLAYERS[g]);
+  let okN = 0, failN = 0, skipN = 0;
+  for (const gid of games) {
+      const label = PLAYERS[gid].label;
+      try {
+        while (true) { // slots-until-done
+          const gs = await api.runStatus(acc.initData, gid);
+          if (!gs.ok) { log(acc.name, err(`${label}: status fail ${gs.code} ${gs.message}`)); failN++; break; }
+          const used = gs.data.slots_used || 0, cap = gs.data.slots_cap || 0;
+          if (cap > 0 && used >= cap) {
+            log(acc.name, warn(`${label}: slot ends (${used}/${cap}) — next ${fmtMs(Math.max(0, Number(gs.data.next_slot_at_ms || 0) - Date.now()))}`));
+            skipN++;
+            break;
+          }
+          const nextSlot = Number(gs.data.next_slot_at_ms || 0);
+          if (nextSlot > Date.now()) {
+            log(acc.name, info(`${label}: next slot in ${fmtMs(nextSlot - Date.now())} — rerun later`));
+            break;
+          }
+          log(acc.name, info(`▶ ${label} playing... (slots ${used}/${cap})`));
+          const res = await playGame(gid, api, acc.initData, null, s);
+          const sv = res.settled || {};
+          if ((sv.violations || []).length) log(acc.name, warn(`${label}: violations=${JSON.stringify(sv.violations)}`));
+          const reward = Number(sv.reward || 0);
+          log(acc.name, ok(`${label}: game over — score=${sv.score ?? "-"} reward=${reward} (${sv.note || 'ok'})`));
+          if (reward > 0 && res.token) await claimGameReward(acc, s, res.token, label);
+          okN++;
+          await sleep(2500 + Math.random() * 2500);
+        }
+      } catch (e) {
+        log(acc.name, err(`${label} crash: ${e.message}`)); failN++;
+      }
+    }
+    
+    log(acc.name, info(`games summary: ok=${okN} fail=${failN} skip=${skipN}`));
+  return { ok: okN, fail: failN, skip: skipN };
+}
+
+async function flowClaimPending(acc, s) {
+  if (!(await ensureAuth(acc))) return;
+  const r = await api.claimsPending(acc.initData);
+  if (!r.ok) return log(acc.name, err(`pending claims fail: ${r.code} ${r.message}`));
+  const rows = r.data.rows || [];
+  if (!rows.length) return log(acc.name, info('কোনো pending claim নেই'));
+  for (const row of rows) {
+    log(acc.name, info(`pending claim: ${row.game} +${row.reward} (${row.token.slice(0, 12)}...)`));
+    await claimGameReward(acc, s, row.token, row.game);
+    await sleep(2000 + Math.random() * 1500);
+  }
+}
+
+// ── runner ─────────────────────────────────────────────────────────
+async function runOnAll(fn, s) {
+  const all = loadAccounts();
+  const only = (s._only || '').split(',').map((x) => x.trim()).filter(Boolean);
+  const accs = only.length ? all.filter((a) => only.includes(a.name)) : all;
+  if (!accs.length) return console.log(err(`কোনো অ্যাকাউন্ট নেই${only.length ? ` (${only.join(',')})` : ''} — যোগ করো: add <name> <initData>`));
+  for (const acc of accs) {
+    if (!acc.initData || acc.initData.startsWith('PASTE_')) { log(acc.name, err('initData নেই, skip'), true); continue; }
+    try { await fn(acc, s); } catch (e) { log(acc.name, err(`crash: ${e.message}`)); }
+    if (s.delayBetweenAccountsMs && accs.length > 1) await sleep(s.delayBetweenAccountsMs + Math.random() * 1500);
+  }
+}
+
+// ── smart loop ─────────────────────────────────────────────────────
+// ── adwatch: fast race loop — ফোনে অ্যাড দেখা হলেই সেকেন্ডের মধ্যে অটো-কালেক্ট ──
+// completeAdView-এর ভেরিফিকেশন উইন্ডো খুব ছোট (~৩০-৬০s) — তাই টোকেন আগেই তৈরি রেখে
+// ছোট ইন্টারভ্যালে রিট্রাই করতে হয়। claimRun-এর উইন্ডো ঢিলেঢালা (মিনিট)।
+const withTimeout = (p, ms, tag) => Promise.race([
+  p, new Promise((_, rej) => setTimeout(() => rej(new Error(`timeout:${tag}`)), ms)),
+]);
+
+async function flowAdwatch(acc, s, opts = {}) {
+  const durationMin = opts.durationMin ?? 25;
+  const intervalSec = opts.intervalSec ?? 5;
+  const deadline = Date.now() + durationMin * 60 * 1000;
+  const ADS = s.ads || DEFAULT_SETTINGS.ads;
+  const pool = []; // {taskId, title, token, born}
+  let okViews = 0, okClaims = 0, lastTaskScan = 0, tasks = [];
+  log(acc.name, ok(`adwatch চালু — ${durationMin ? durationMin + ' মিনিট' : 'অনির্দিষ্টকাল'}, প্রতি ${intervalSec}s-এ রিট্রাই। ফোনে যেকোনো সময় অ্যাড দেখলেই অটো-কালেক্ট হবে`));
+  while (Date.now() < deadline) {
+    try {
+      // ── game claim retries (window: minutes) ──
+      const pc = await withTimeout(api.claimsPending(acc.initData), 5000, 'pc').catch(() => null);
+      if (pc && pc.ok) {
+        for (const row of pc.data.rows || []) {
+          const cr = await withTimeout(api.claimRun(acc.initData, { token: row.token, ...ADS }), 5000, 'cr').catch((e) => ({ ok: false, message: e.message }));
+          if (cr.ok && cr.data && cr.data.reward !== undefined) {
+            okClaims++;
+            log(acc.name, ok(`CLAIM ✓ ${row.game} +${cr.data.reward} (balance ${cr.data.balance})`));
+          }
+        }
+      }
+      // ── ad-task: STAGGERED one-shot pipeline ──
+      // প্রতি টোকেনে মাত্র ১টা চেষ্টা (প্রথম শটেই টোকেন বাতিল হয়), বয়স ~২৫-৪০s-এ।
+      // পাইপলাইনে টোকেনগুলো স্ট্যাগার্ড থাকে → যেকোনো শোর ৬০s উইন্ডোতে একটা লাইভ শট পড়ে।
+      if (Date.now() - lastTaskScan > 120000) {
+        lastTaskScan = Date.now();
+        const t = await withTimeout(api.tasks(acc.initData), 5000, 'tasks').catch(() => null);
+        tasks = t && t.ok ? (t.data.tasks || []).filter((x) => (x.max_views || 0) > 0 && !x.completed) : [];
+      }
+      const now = Date.now();
+      // পুরনো/ব্যবহৃত এন্ট্রি ঝরাও
+      for (let i = pool.length - 1; i >= 0; i--) if (pool[i].used || now - pool[i].born > 180000) pool.splice(i, 1);
+      for (const task of tasks) {
+        // প্রতি ~১২ সেকেন্ডে নতুন টোকেন, লাইভ অ্যাটেম্পট না থাকলে
+        const live = pool.filter((p) => p.taskId === task.id && !p.used);
+        if (live.length < 1 && now - (task._lastCreate || 0) > 30000) {
+          const sv = await withTimeout(api.startAdView(acc.initData, task.id), 5000, 'sv').catch(() => null);
+          if (sv && sv.ok) {
+            pool.push({ taskId: task.id, title: task.title, token: sv.data.token, born: now, used: false });
+            task._lastCreate = now;
+          }
+        }
+        // বয়স ২৪-৯০s হলে একবার শট দাও
+        for (const p of pool.filter((x) => x.taskId === task.id && !x.used && now - x.born >= 24000 && now - x.born <= 90000)) {
+          p.used = true;
+          const cv = await withTimeout(api.completeAdView(acc.initData, { token: p.token, ...ADS, ad_id: '' }), 5000, 'cv').catch((e) => ({ ok: false, message: e.message }));
+          if (cv && cv.ok && cv.data && cv.data.ok) {
+            okViews++;
+            log(acc.name, ok(`AD-VIEW ✓ "${p.title}" +${cv.data.reward || 0}`));
+            const vs = await withTimeout(api.adViewStatus(acc.initData, p.taskId), 4000, 'vs').catch(() => null);
+            if (vs && vs.ok && (vs.data.views_used || 0) >= (vs.data.max_views || 0)) {
+              log(acc.name, ok(`"${p.title}" সম্পূর্ণ!`));
+              tasks = tasks.filter((x) => x.id !== p.taskId);
+            }
+          } else {
+            // একবার লগে (ডিবাগ) — উইন্ডো মিস বা শো ছাড়া শট
+            const age = Math.round((Date.now() - p.born) / 1000);
+            if (age % 60 < 20) log(acc.name, info(`shot miss (${age}s, ${((cv && cv.message) || '').slice(0, 30)})`));
+          }
+        }
+      }
+    } catch (e) { /* নীরবে পরের টিক */ }
+    await sleep(intervalSec * 1000);
+  }
+  log(acc.name, ok(`adwatch শেষ — views ✓${okViews}, claims ✓${okClaims}`));
+  return { okViews, okClaims };
+}
+
+// ── flowAdcrack: ক্র্যাকড অ্যাড-ভিউ স্যুট (sad.min.js রিভার্সড,2026-09-25) ──
+// জিতের ফর্মুলা: startAdView → সাইনড /adv+বিকন (রেকর্ড) → completeAdView{ads_clicked:1, ad_id:record}
+async function flowAdcrack(acc, s) {
+  const adsMod = require('./lib/adsgram');
+  const id = acc.initData;
+  const ADS = s.ads || DEFAULT_SETTINGS.ads;
+  let views = 0, claims = 0;
+
+  // ১) সব অ্যাড-টাস্কের বাকি ভিউ (ADSGRAM/MONETAG সরাসরি কাজ করে; ADEXIUM তাদের ক্লিক-পোস্টব্যাক চায়)
+  try {
+    const ts = await withTimeout(api.tasks(id), 30000, 'tasks');
+    for (const t of (ts.data && ts.data.tasks) || []) {
+      if (!['ADSGRAM', 'MONETAG'].includes(t.type) || t.completed || t.locked) continue;
+      const need = (t.max_views || 0) - (t.views_used || 0);
+      if (need <= 0) continue;
+      log(acc.name, info(`adview "${t.title}" (${t.type}) — ${need} ভিউ`));
+      for (let k = 0; k < need; k++) {
+        const cv = await adsMod.completeOneView(api, id, t.id, (m) => log(acc.name, ok(`${t.title} ${k + 1}/${need}${m}`)));
+        if (!cv.ok) { log(acc.name, warn(`${t.title} ভিউ ${k + 1} থামল: ${cv.message}`)); break; }
+        views++;
+        await sleep(1500 + Math.random() * 1500);
+      }
+    }
+  } catch (e) { log(acc.name, err(`adview: ${e.message}`)); }
+
+  // ১খ) ADEXIUM_AUTOTRY — বিড ফিল পেলে পুরো ট্যাপ-ফ্লো (impression → click → completeAdView{ad_id})
+  try {
+    for (let k = 0; k < 12; k++) {
+      const r6 = await adsMod.adexiumView(api, id);
+      if (r6.skip) break;
+      if (r6.ok) { views++; log(acc.name, ok('ADEXIUM ভিউ ✓ +' + r6.reward + ' [' + (r6.via || '') + ']' + adsMod.creditNote(r6.data))); await sleep(2000 + Math.random() * 1500); continue; }
+      log(acc.name, warn('ADEXIUM #6: ' + r6.message + (r6.noFill ? ' — পরে অটো রিট্রাই' : '')));
+      break;
+    }
+  } catch (e) { log(acc.name, err('adexium: ' + e.message)); }
+
+  // ১গ) LINK_V1 — "Click & Earn" (task type LINK, frontend runTask): startAdView + লিংক খোলো →
+  //     পেজে ≥10s থাকো (নাহলে link_too_soon) → completeAdView{token, 0,0,0, adId:""}
+  try {
+    const ts = await withTimeout(api.tasks(id), 30000, 'tasks');
+    const LH = { referer: 'https://leafearn.site/', 'user-agent': 'Mozilla/5.0 (Linux; Android 13; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/120.0.6099.230 Mobile Safari/537.36' };
+    for (const t of (ts.data && ts.data.tasks) || []) {
+      if (t.type !== 'LINK' || t.completed || t.locked) continue;
+      const need = Math.max(0, (t.max_views || 1) - (t.views_used || 0));
+      for (let k = 0; k < need; k++) {
+        const sv = await api.startAdView(id, t.id);
+        if (!sv.ok) { log(acc.name, warn('LINK "' + t.title + '": ' + sv.message)); break; }
+        if (t.action_url) await fetch(t.action_url, { redirect: 'follow', headers: LH, signal: AbortSignal.timeout(20000) }).then((x) => x.text()).catch(() => {});
+        await sleep(11500 + Math.random() * 2500);
+        let cv = await api.completeAdView(id, { token: sv.data.token, ads_shown: 0, ads_clicked: 0, ads_offered: 0, ad_id: '' });
+        if (!cv.ok && cv.message === 'link_too_soon') { await sleep(5000); cv = await api.completeAdView(id, { token: sv.data.token, ads_shown: 0, ads_clicked: 0, ads_offered: 0, ad_id: '' }); }
+        if (cv.ok) { views++; log(acc.name, ok('LINK "' + t.title + '" ' + (k + 1) + '/' + need + ' +' + cv.data.reward + ' ✓')); }
+        else { log(acc.name, warn('LINK "' + t.title + '" ' + (k + 1) + '/' + need + ': ' + cv.message)); break; }
+        await sleep(1500 + Math.random() * 1500);
+      }
+    }
+  } catch (e) { log(acc.name, err('link: ' + e.message)); }
+
+  // ২) QUICK_V3 — কুইক-টাস্ক চেইন (frontend-হুবহু): offer → open(open_url)=ট্যাপ → wait_sec → [reward_url] → claim{type, refId}
+  //    ADSGRAM_LINK: refId = open_url শর্ট-লিংক স্লাগ (ক্র্যাকড) · WEBSITE: refId = offer.ref_id · ADEXIUM/COMMENT: আলাদা (বিড/ইউজার-মেসেজ)
+  try {
+    const QTYPES = ['ADSGRAM_LINK', 'WEBSITE'];
+    const QH = { referer: 'https://leafearn.site/', 'user-agent': 'Mozilla/5.0 (Linux; Android 13; SM-S918B) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/120.0.6099.230 Mobile Safari/537.36' };
+    let empties = 0, nextT = null;
+    for (let round = 0; round < 15 && empties < 3; round++) {
+      let t = nextT && QTYPES.includes(nextT.type) ? nextT : null;
+      nextT = null;
+      if (!t) {
+        for (const ty of QTYPES) {
+          const qo = await api.quickOffer(id, ty);
+          const tt = qo.ok && qo.data && (qo.data.task || null);
+          if (tt && tt.type === ty) { t = tt; break; }
+        }
+      }
+      if (!t) { empties++; await sleep(4000); continue; }
+      empties = 0;
+      if (t.type === 'ADSGRAM_LINK') await adsMod.doAdShow(id);
+      if (t.open_url) await fetch(t.open_url, { redirect: 'follow', headers: QH, signal: AbortSignal.timeout(20000) }).catch(() => {});
+      const slug = (t.open_url || '').replace(/\/+$/, '').split('/').pop() || '';
+      const refs = [...new Set(t.type === 'ADSGRAM_LINK' ? [slug, t.ref_id || ''] : [t.ref_id || '', slug])].filter((x, i) => x || i === 0);
+      await sleep(((t.wait_sec || 5) + 1) * 1000);
+      if (t.reward_url) await fetch(t.reward_url, { redirect: 'follow', headers: QH, signal: AbortSignal.timeout(20000) }).catch(() => {});
+      let qok = false, lastMsg = '';
+      for (const refId of refs) {
+        for (let k = 0; k < (t.reward_url ? 4 : 3) && !qok; k++) {
+          const cl = await api.quickClaim(id, t.type, refId);
+          if (cl.ok) { qok = true; claims++; log(acc.name, ok('quick ' + t.type + ' +' + cl.data.credited + ' ✓ (bal ' + cl.data.balance + ')')); nextT = cl.data.has_next ? cl.data.next : null; break; }
+          lastMsg = cl.message;
+          if (/limit_reached|done all of these/i.test(lastMsg)) break;
+          await sleep(3000);
+        }
+        if (qok) break;
+      }
+      if (!qok) { log(acc.name, warn('quick ' + t.type + ': ' + lastMsg)); break; }
+      await sleep(1500);
+    }
+  } catch (e) { log(acc.name, err('quick: ' + e.message)); }
+
+  // ৩) পেন্ডিং গেম-ক্লেম (শো-র পর claimRun পাস করে)
+  try {
+    const cp = await withTimeout(api.claimsPending(id), 30000, 'claims');
+    for (const row of (cp.data && cp.data.rows) || []) {
+      await adsMod.doAdShow(id);
+      const cr = await api.claimRun(id, { token: row.token, ads_shown: 1, ads_clicked: 1, ads_offered: 1 });
+      if (cr.ok) { claims++; log(acc.name, ok(`claimRun ${row.game} +${row.reward} ✓`)); }
+      else log(acc.name, warn(`claimRun ${row.game}: ${cr.message}`));
+    }
+  } catch (e) { log(acc.name, err(`claims: ${e.message}`)); }
+
+  log(acc.name, ok(`adcrack শেষ — views ✓${views}, claims ✓${claims}`));
+  return { okViews: views, okClaims: claims };
+}
+
+async function loop(s) {
+  console.log(info(`SMART LOOP · preferGift=${s.preferGift} · chain=${s.chainAfterClaim} · spin=${s.autoSpin} · Ctrl+C দিয়ে বন্ধ`));
+  while (true) {
+    banner();
+    const accs = loadAccounts();
+    if (!accs.length) { log('system', err('কোনো অ্যাকাউন্ট নেই'), true); break; }
+    const nexts = [];
+    for (const acc of accs) {
+      if (!acc.initData || acc.initData.startsWith('PASTE_')) continue;
+      try {
+        if (s.autoSpin) await flowSpin(acc, s);
+        const r = await mineTick(acc, s);
+        if (r && r.nextCheckSec) nexts.push(r.nextCheckSec);
+      } catch (e) { log(acc.name, err(`crash: ${e.message}`)); nexts.push(300); }
+      if (accs.length > 1) await sleep(s.delayBetweenAccountsMs + Math.random() * 1000);
+    }
+    const valid = nexts.filter((n) => n > 0);
+    const waitSec = Math.max(s.minCheckSeconds || 45, valid.length ? Math.min(...valid) : 600);
+    const jitter = Math.floor(Math.random() * (s.jitterSeconds || 25));
+    const finalWait = waitSec + jitter;
+    log('system', ok(`next tick ${fmtMs(finalWait * 1000)} পরে`), true);
+    await sleep(finalWait * 1000);
+  }
+}
+
+// ── status command ─────────────────────────────────────────────────
+async function showStatus(s) {
+  banner();
+  const h = await api.health();
+  if (h.ok) console.log(ok(`server ✓ v${h.data.version} · users=${h.data.user_count}`));
+  else console.log(err(`server health fail: ${h.code} ${h.message}`));
+  for (const acc of loadAccounts(false)) {
+    if (!acc.initData || acc.initData.startsWith('PASTE_')) continue;
+    const st = await api.mineStatus(acc.initData);
+    const sy = await api.sync(acc.initData);
+    const u = (sy.ok && sy.data.user) || {};
+    if (st.ok) {
+      const g = GIFTS[st.data.gift] || GIFTS.BEAR;
+      const prog = `${g.name} ${st.data.mined || 0}/${totalPoints(g)} pts (${Math.floor((st.data.mined || 0) / POINTS_PER_STEP)}/${g.steps} taps)`;
+      console.log(ok(`${acc.name}: 🌿 ${u.leaf ?? st.data.balance ?? 0} leaf · gift=${st.data.has_cycle ? prog : 'none'}`));
+    } else {
+      console.log(err(`${acc.name}: ${st.code} ${st.message}`));
+    }
+  }
+}
+
+function listAccounts(accs) {
+  if (!accs.length) return console.log(warn('কোনো অ্যাকাউন্ট নেই। যোগ: node leafmine.js add <name> "<initData>"'));
+  console.log(`\n${C.bold}${'NAME'.padEnd(18)} ${'STATUS'.padEnd(8)} ${'GIFT'.padEnd(8)} ${'INITDATA'.padEnd(10)} NOTE${C.reset}`);
+  console.log('─'.repeat(64));
+  for (const a of accs) {
+    const st = a.enabled !== false ? `${C.green}ON${C.reset}` : `${C.dim}OFF${C.reset}`;
+    const valid = (a.initData || '').length > 50 && !a.initData.startsWith('PASTE_');
+    const v = valid ? `${C.green}✓${C.reset}` : `${C.red}✗${C.reset}`;
+    console.log(`${a.name.padEnd(18)} ${st.padEnd(17)} ${String(a.prefer_gift || '-').padEnd(8)} ${((a.initData || '').length + ' ').padEnd(8)} ${v} ${(a.note || '')}`);
+  }
+  console.log('');
+}
+
+// ── interactive menu ───────────────────────────────────────────────
+async function menu() {
+  ensureDirs();
+  const s = loadSettings();
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  const ask = (q) => new Promise((res) => rl.question(q, res));
+  while (true) {
+    banner();
+    console.log(`${C.cyan}1${C.reset}  Mine tick (all akun)`);
+    console.log(`${C.cyan}2${C.reset}  Claim (jodi ready hoy)`);
+    console.log(`${C.cyan}3${C.reset}  Task gulo complete koro`);
+    console.log(`${C.cyan}4${C.reset}  Free spin`);
+    console.log(`${C.cyan}5${C.reset}  Membership verify`);
+    console.log(`${C.cyan}6${C.reset}  Full run (task + spin + mine)`);
+    console.log(`${C.cyan}7${C.reset}  Loop forever (smart mine+claim+spin)`);
+    console.log(`${C.cyan}8${C.reset}  Status + list akun`);
+    console.log(`${C.cyan}9${C.reset}  Akun add koro`);
+    console.log(`${C.cyan}10${C.reset} Akun delete koro`);
+    console.log(`${C.cyan}11${C.reset} Akun enable/disable`);
+    console.log(`${C.cyan}12${C.reset} Prefer gift change (halka ${GIFTS.BEAR.name}/Heart/…)`);
+    console.log(`${C.cyan}13${C.reset} 🎮 Game gulo auto-khel (5 ta game + claim)`);
+    console.log(`${C.cyan}14${C.reset} 🎯 Sob kichu (task + spin + games + pending claim + mine)`);
+    console.log(`${C.cyan}0${C.reset}  Ber hoye jao\n`);
+    const c = (await ask(`${C.magenta}▸${C.reset} `)).trim();
+    try {
+      if (c === '1') await runOnAll(mineTick, s);
+      else if (c === '2') await runOnAll(flowClaim, s);
+      else if (c === '3') await runOnAll(flowTask, s);
+      else if (c === '4') await runOnAll(flowSpin, s);
+      else if (c === '5') await runOnAll(flowVerify, s);
+      else if (c === '6') await runOnAll(flowFull, s);
+      else if (c === '7') { rl.close(); return loop(s); }
+      else if (c === '8') { await showStatus(s); listAccounts(loadAccounts(false)); }
+      else if (c === '13') await runOnAll(flowGames, s);
+      else if (c === '14') await runOnAll(async (acc, ss) => {
+        await flowTask(acc, ss); await flowSpin(acc, ss); await flowGames(acc, ss);
+        await flowClaimPending(acc, ss); await mineTick(acc, ss);
+      }, s);
+      else if (c === '9') {
+        const name = (await ask('akun er naam: ')).trim();
+        const id = (await ask('initData (Telegram WebApp theke): ')).trim().replace(/^["']|["']$/g, '');
+        const gift = (await ask(`prefer gift [${s.preferGift}]: `)).trim().toUpperCase() || s.preferGift;
+        if (!name || !id) { console.log(err('naam & initData dorkar')); continue; }
+        saveAccount({ name, initData: id, enabled: true, prefer_gift: gift, start_param: '', note: '' });
+        console.log(ok(`akun ${name} save holo`));
+      }
+      else if (c === '10') {
+        const name = (await ask('jeta delete korbo tar naam: ')).trim();
+        deleteAccount(name); console.log(ok(`${name} delete holo`));
+      }
+      else if (c === '11') {
+        const name = (await ask('akun er naam: ')).trim();
+        const a = loadAccounts(false).find((x) => x.name === name);
+        if (!a) { console.log(err('nai')); continue; }
+        a.enabled = a.enabled === false; saveAccount(a);
+        console.log(ok(`${a.name} ekhon ${a.enabled ? 'ENABLED' : 'DISABLED'}`));
+      }
+      else if (c === '12') {
+        console.log(`options: ${Object.keys(GIFTS).join(' / ')}`);
+        const gift = (await ask('gift id: ')).trim().toUpperCase();
+        if (GIFTS[gift]) { s.preferGift = gift; saveSettings(s); console.log(ok(`preferGift=${gift}`)); }
+        else console.log(err('invalid gift id'));
+      }
+      else if (c === '0') { rl.close(); return; }
+      else console.log(warn('invalid'));
+    } catch (e) { console.log(err(`Error: ${e.message}`)); }
+  }
+}
+
+// ── helpers: initData parsing + safety alarm ───────────────────────
+function uidOf(initData) {
+  try { return String(JSON.parse(new URLSearchParams(initData).get('user') || '{}').id || ''); } catch { return ''; }
+}
+function parseInitInput(raw) {
+  raw = String(raw || '').trim().replace(/&amp;/g, '&').replace(/&amp;/g, '&');
+  if (!raw) return '';
+  const m = raw.match(/tgWebAppData=([^&#\s]+)/);
+  let v = m ? decodeURIComponent(m[1]) : raw;
+  if (!/query_id=|user=/.test(v)) { try { v = decodeURIComponent(v); } catch {} }
+  return /user=/.test(v) && /hash=/.test(v) ? v : '';
+}
+let lastSafetyAlarm = 0;
+require('./lib/leafapi').onSafetyRequired((uid, where) => {
+  if (Date.now() - lastSafetyAlarm < 10 * 60e3) return;
+  lastSafetyAlarm = Date.now();
+  const acc = loadAccounts(false).find((a) => String(a.tgId || uidOf(a.initData || '')) === String(uid));
+  const nm = acc ? acc.name : uid;
+  console.log('\n' + C.bgMagenta + C.bold + '  ⚠ QUICK SAFETY CHECK দরকার (' + nm + ')  ' + C.reset);
+  console.log(warn('Leaf সার্ভার একটা ৪-সংখ্যার কোড চাইছে (' + where + ')। বট এখন কোড পাঠাতে বলছে…'));
+  console.log(warn('Telegram-এ @LeafEarnBot-এর মেসেজে কোড আসবে → চালাও:  node leafmine.js safety <CODE> --only ' + nm));
+  console.log(warn('(অথবা ফোনে Leaf অ্যাপ খুলে কোডটা দিলেও হবে — বট নিজে থেকে আবার চালু হবে)\n'));
+  if (acc) api.sendSafetyCheck(acc.initData).then((r) => { if (r.ok && r.data.reason === 'bot_blocked') console.log(err('@LeafEarnBot ব্লক করা — আনব্লক করে /start দাও')); }).catch(() => {});
+});
+
+// ── CLI dispatcher ─────────────────────────────────────────────────
+async function main() {
+  ensureDirs();
+  const args = process.argv.slice(2);
+  const cmd = args[0];
+  if (!cmd) return menu();
+  const s = loadSettings();
+
+  if (cmd === 'add') {
+    const name = args[1];
+    const initData = args.slice(2).filter((a) => !a.startsWith('--')).join(' ').replace(/^["']|["']$/g, '');
+    if (!name || !initData) return console.log(err('Usage: add <name> <initData> [--gift BEAR]'));
+    const gi = args.findIndex((a) => a === '--gift');
+    const gift = (gi >= 0 && args[gi + 1] ? args[gi + 1] : s.preferGift).toUpperCase();
+    saveAccount({ name, initData, enabled: true, prefer_gift: GIFTS[gift] ? gift : s.preferGift, start_param: '', note: '' });
+    console.log(ok(`akun ${name} save holo (initData len=${initData.length}, gift=${GIFTS[gift] ? gift : s.preferGift})`));
+    return;
+  }
+  if (cmd === 'remove' || cmd === 'rm') {
+    if (!args[1]) return console.log(err('Usage: remove <name>'));
+    deleteAccount(args[1]); return console.log(ok(`${args[1]} delete holo`));
+  }
+  if (cmd === 'list' || cmd === 'ls') return listAccounts(loadAccounts(false));
+  if (cmd === 'status') return showStatus(s);
+  if (cmd === 'run') {
+    const action = args[1] || 'full';
+    const force = args.includes('--force') || args.includes('-f');
+    const onlyIdx = args.findIndex((a) => a === '--only' || a === '-o');
+    const flowAll = async (acc, ss) => {
+      await flowTask(acc, ss);
+      await flowSpin(acc, ss);
+      await flowGames(acc, ss);
+      await flowAdcrack(acc, ss);
+      await flowClaimPending(acc, ss);
+      await mineTick(acc, ss);
+    };
+    const adwatch = async (acc, ss) => flowAdcrack(acc, ss);
+    const flows = { mine: mineTick, claim: flowClaim, task: flowTask, spin: flowSpin, verify: flowVerify, full: flowFull, games: flowGames, claimpending: flowClaimPending, all: flowAll, adwatch };
+    const fn = flows[action];
+    if (!fn) return console.log(err(`Unknown action: ${action}. Options: mine|claim|task|spin|verify|full|games|claimpending|adwatch|all`));
+    banner();
+    if (action === 'adwatch') {
+      return runOnAll(flowAdcrack, { ...s, force, _only: onlyIdx >= 0 ? args[onlyIdx + 1] || '' : '' });
+    }
+    return runOnAll(fn, { ...s, force, _only: onlyIdx >= 0 ? args[onlyIdx + 1] || '' : '' });
+  }
+  if (cmd === 'loop' || cmd === 'autopilot') {
+    banner();
+    return require('./lib/autopilot').autopilot({ api, loadAccounts, ensureAuth, mineTick, flowSpin, flowGames, flowAdcrack, flowTask, log, ok, warn, err, info, fmtMs, sleep, PLAYERS }, s);
+  }
+  if (cmd === 'loop-lite') { banner(); return loop(s); }
+  // SAFETY_CLI_V1 — Quick Safety Check (সার্ভারের অ্যান্টি-বট চেক): কোড @LeafEarnBot থেকে Telegram-এ আসে
+  if (cmd === 'safety' || cmd === 'code') {
+    const code = (args[1] && /^\d{4,8}$/.test(args[1])) ? args[1] : '';
+    const oi = args.findIndex((x) => x === '--only' || x === '-o');
+    const L = require('./lib/leafapi');
+    return runOnAll(async (acc) => {
+      const id = acc.initData;
+      if (code) {
+        const v = await api.verifySafetyCheck(id, code);
+        if (!v.ok) return log(acc.name, err('safety verify: ' + v.message));
+        if (v.data.ok) { L.clearSafety(acc.tgId || uidOf(id)); return log(acc.name, ok('✅ Safety Check পাস! +' + (v.data.reward || 0) + ' leaf — বট আবার স্বাভাবিকভাবে চলবে')); }
+        const why = v.data.reason === 'wrong' ? 'ভুল কোড — আর ' + v.data.attempts_left + ' বার চেষ্টা বাকি' : v.data.reason === 'locked' ? 'অনেকবার ভুল — ' + (v.data.resend_in_sec || 0) + 's পরে নতুন কোড নাও' : 'কোডের মেয়াদ শেষ — node leafmine.js safety দিয়ে নতুন কোড নাও';
+        return log(acc.name, warn('safety: ' + why));
+      }
+      const st = await api.safetyStatus(id);
+      if (!st.ok) return log(acc.name, err('safety status: ' + st.message));
+      if (st.data.passed) { L.clearSafety(acc.tgId || uidOf(id)); return log(acc.name, ok('Safety Check: ✓ passed (কিছু করতে হবে না)')); }
+      let d = st.data;
+      if (!(d.code_left_sec > 0)) {
+        const sd = await api.sendSafetyCheck(id);
+        if (!sd.ok) return log(acc.name, err('safety send: ' + sd.message));
+        d = sd.data;
+        if (d.passed) return log(acc.name, ok('Safety Check: ✓ passed'));
+        if (d.reason === 'bot_blocked') return log(acc.name, err('@LeafEarnBot ব্লক/স্টপ করা আছে — Telegram-এ বটটা আনব্লক করে /start দাও, তারপর আবার চালাও'));
+      }
+      log(acc.name, warn('📩 @LeafEarnBot তোমার Telegram-এ ৪-সংখ্যার কোড পাঠিয়েছে (মেয়াদ ' + (d.code_left_sec || 0) + 's)'));
+      log(acc.name, warn('   → চালাও:  node leafmine.js safety <CODE>' + (acc.name ? '  --only ' + acc.name : '')));
+    }, { ...s, _only: oi >= 0 ? args[oi + 1] || '' : '' });
+  }
+  // SETINIT_V1 — নতুন WebApp লিংক/initData সরাসরি অ্যাকাউন্টে বসাও (tmp_newinit.js-এর বদলে)
+  if (cmd === 'setinit') {
+    const name = args.find((x, i) => i > 0 && !x.startsWith('--') && !/tgWebAppData|query_id=|user=/.test(x)) || '';
+    const raw = args.slice(1).find((x) => /tgWebAppData|query_id=|user=/.test(x)) || (fs.existsSync(path.join(ROOT, 'initdata.txt')) ? fs.readFileSync(path.join(ROOT, 'initdata.txt'), 'utf8') : '');
+    const initData = parseInitInput(raw);
+    if (!initData) return console.log(err('Usage: node leafmine.js setinit [name] "<leafearn.site/#tgWebAppData=... লিংক অথবা initData>"\n   (অথবা লিংকটা initdata.txt ফাইলে পেস্ট করে শুধু: node leafmine.js setinit [name])'));
+    const accs = loadAccounts(false);
+    const uid = uidOf(initData);
+    let acc = accs.find((a) => a.name === name) || accs.find((a) => String(a.tgId || uidOf(a.initData || '')) === uid);
+    if (!acc) acc = { name: name || ('acc' + uid), enabled: true, prefer_gift: s.preferGift, start_param: '', note: '' };
+    if (acc.initData && acc.initData !== initData) acc.initDataPrev = acc.initData;
+    acc.initData = initData; acc.tgId = uid; acc.updatedAt = new Date().toISOString();
+    try { acc.username = JSON.parse(new URLSearchParams(initData).get('user') || '{}').username || acc.username; } catch {}
+    saveAccount(acc);
+    const ad = Number(new URLSearchParams(initData).get('auth_date') || 0);
+    console.log(ok('initData সেভ → config/accounts/' + acc.name + '.json (user @' + (acc.username || '?') + ', tg ' + uid + ', auth_date ' + (ad ? new Date(ad * 1000).toISOString() : '?') + ')'));
+    const r = await api.init(initData, acc.start_param || '');
+    console.log(r.ok ? ok('লগইন টেস্ট ✓ — 🌿 ' + r.data.user.leaf + ' leaf') : err('লগইন টেস্ট ✘ — ' + r.message));
+    return;
+  }
+  if (cmd === 'redeem') {
+    const code = args[1];
+    if (!code || code.startsWith('--')) return console.log(err('Usage: redeem <CODE> [--only name]'));
+    banner();
+    const { redeemCode } = require('./lib/redeem');
+    const oi = args.findIndex((x) => x === '--only' || x === '-o');
+    return runOnAll(async (acc) => {
+      if (!(await ensureAuth(acc))) return;
+      const r = await redeemCode(api, acc.initData, code);
+      if (r.ok) log(acc.name, ok('🎟 redeem ' + code.toUpperCase() + ' → +' + r.reward + r.note + ' · balance ' + r.balance));
+      else log(acc.name, err('🎟 redeem ' + code.toUpperCase() + ' [' + (r.stage || '?') + ']: ' + r.message));
+    }, { ...s, _only: oi >= 0 ? args[oi + 1] || '' : '' });
+  }
+  if (cmd === 'state') {
+    const state = loadState();
+    console.log(`\n${C.bold}── COOLDOWN STATE ──${C.reset}`);
+    for (const a of loadAccounts(false)) {
+      const st = (state.accounts || {})[a.name] || {};
+      console.log(`  ${a.name.padEnd(18)} lastTask: ${st.lastTaskRun || 'never'}`);
+    }
+    return;
+  }
+  if (cmd === 'help' || cmd === '--help' || cmd === '-h') {
+    return console.log(`Usage: node leafmine.js [command]
+Commands:
+  (no arg)               Interactive menu
+  add <name> <initData>  Akun add (initData: Telegram WebApp theke)
+                         --gift BEAR|HEART|GIFT|ROCKET
+  remove <name>          Akun delete
+  list                   Shob akun list
+  status                 Server + akun status (balance, mine progress)
+  run [action]           Ekbar chalao: mine|claim|task|spin|verify|full|games|adwatch|claimpending|all
+                         --only <name[,name]>   shudhu certain akun
+                         --force                claim ready na holeo try korbe
+  loop | autopilot       🤖 FULL AUTOPILOT: mine+spin+ads(12h reset)+quick+games(all slots)+claims+missions
+  loop-lite              Purono loop (shudhu mine+spin)
+  redeem <CODE>          🎟 Channel-er promo code redeem (ad-gate auto)
+  safety [CODE]          🛡 Quick Safety Check: kod chaile pathay, CODE dile verify kore
+  setinit [name] "<link>" 🔑 Notun leafearn.site/#tgWebAppData=… link/initData boshao
+  state                  Cooldown dekho
+  help                   Ei help
+
+initData kothay paba: webapp khulo → Inspect → Network → kono request-er
+header/body-te "initData" / "x-init-data" field. Poora string copy koro.
+Note: initData ~24 ghonta valid — expire hole notun nao.`);
+  }
+  console.log(err(`Unknown command: ${cmd}. Try: help`));
+}
+
+main().catch((e) => { console.error(err(`Fatal: ${e.message}`)); console.error(e.stack); process.exit(1); });
