@@ -1,0 +1,15 @@
+
+[45m[1m  LEAF EARN MINER · MULTI  [0m
+[2026-09-29 02:17:36] [32m✔[0m auth ✓ Abdur081 · 🌿 2359 leaf · role=USER
+[2026-09-29 02:17:36] [36mℹ[0m tasks: total=11 pending=7
+[2026-09-29 02:17:36] [36mℹ[0m ad-task "Watch Ads & Earn #1" (0/7) → adwatch সামলাবে
+[2026-09-29 02:17:38] [36mℹ[0m task "Add Leaf to your bio" (BIO) +200 · try 0/1
+[2026-09-29 02:17:41] [33m⚠[0m task "Add Leaf to your bio": bio doesn't have the link yet → Telegram bio-তে এই লাইনটা বসাও: 🍀 Best Earning Bot :- t.me/LeafEarnBot/app?startapp=1692540458
+[2026-09-29 02:17:44] [36mℹ[0m ad-task "Watch Ads & Earn #2" (0/10) → adwatch সামলাবে
+[2026-09-29 02:17:47] [36mℹ[0m ad-task "Watch Ads & Earn #3" (0/5) → adwatch সামলাবে
+[2026-09-29 02:17:49] [36mℹ[0m task "Open Boinkers and win GRAM" (TELEGRAM) +80 · try 0/1
+[2026-09-29 02:17:54] [33m⚠[0m task "Open Boinkers and win GRAM": join the channel first → আগে জয়েন করো: https://t.me/boinker_bot/boinkapp?startapp=campLeaf_lesha
+[2026-09-29 02:17:56] [36mℹ[0m task "Spin Boinkers slot 20 times" (OTHERS) +200 · try 0/1
+[2026-09-29 02:18:01] [33m⚠[0m task "Spin Boinkers slot 20 times": Couldn't verify with the partner right now — try again in a minute
+[2026-09-29 02:18:03] [36mℹ[0m ad-task "Click & Earn" (0/3) → adwatch সামলাবে
+[2026-09-29 02:18:05] [36mℹ[0m task summary: ok=0 fail=3 skip=4
