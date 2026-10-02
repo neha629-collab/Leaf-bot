@@ -1,0 +1,23 @@
+
+[45m[1m  LEAF EARN MINER · MULTI  [0m
+[2026-10-02 10:29:48] [36mℹ[0m 🤖 AUTOPILOT চালু — mine · spin · ads(১২ঘ রিসেট) · quick · games(সব স্লট) · claims · missions — Ctrl+C = বন্ধ
+[2026-10-02 10:29:49] [32m✔[0m auth ✓ Abdur081 · 🌿 1195 leaf · role=USER
+[2026-10-02 10:29:49] [32m✔[0m 🛡 Safety Check পাস — কাজ আবার চালু
+[1m[35m── main ──[0m [32m🌿 1195 leaf[0m · [36m🎁 Teddy Bear[0m [2m(no-cycle, next —)[0m
+[2026-10-02 10:29:49] [36mℹ[0m → PICK Teddy Bear (BEAR)
+[2026-10-02 10:29:49] [31m✘[0m pick fail: FAILED_PRECONDITION not enough leaf (এই গিফটের জন্য 5000 leaf লাগে — ব্যালেন্স কম হলে BEAR/HEART দাও)
+[2026-10-02 10:29:50] [36mℹ[0m → SPIN ...
+
+[45m[1m  ⚠ QUICK SAFETY CHECK দরকার (main)  [0m
+[33m⚠[0m Leaf সার্ভার একটা ৪-সংখ্যার কোড চাইছে (leaf.v1.SpinService/Spin)। বট এখন কোড পাঠাতে বলছে…
+[33m⚠[0m Telegram-এ @LeafEarnBot-এর মেসেজে কোড আসবে → চালাও:  node leafmine.js safety <CODE> --only main
+[33m⚠[0m (অথবা ফোনে Leaf অ্যাপ খুলে কোডটা দিলেও হবে — বট নিজে থেকে আবার চালু হবে)
+
+
+[45m[1m  ⏳ SAFETY CODE দরকার  [0m
+[33m⚠[0m সার্ভার "leaf.v1.SpinService/Spin" আটকে দিয়েছে। Telegram-এ @LeafEarnBot-এর মেসেজে ৪-ডিজিট কোড এসেছে (অথবা ফোনে Leaf অ্যাপ খুলে কোড দিন)। বট 25 মিনিট অপেক্ষা করবে…
+
+[36mℹ[0m কোডের মেয়াদ 300s বাকি — অপেক্ষা করছি…
+[36mℹ[0m কোডের মেয়াদ 285s বাকি — অপেক্ষা করছি…
+[36mℹ[0m কোডের মেয়াদ 269s বাকি — অপেক্ষা করছি…
+[36mℹ[0m কোডের মেয়াদ 254s বাকি — অপেক্ষা করছি…
