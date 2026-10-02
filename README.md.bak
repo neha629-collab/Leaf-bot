@@ -1,0 +1,93 @@
+# 🍃 LeafEarn Bot — ফাইনাল ডকুমেন্টেশন
+
+সম্পূর্ণ অটোমেটেড LeafEarn মিনার: মাইন (TG Star গিফট), মিশন, **অ্যাড-ভিউ (ক্র্যাকড)**, **কুইক-টাস্ক (ক্র্যাকড)**, স্পিন, ৫টা গেম (সব স্লট), রিডিম কোড, **পূর্ণ অটোপাইলট**।
+
+## চালানো
+
+```bash
+cd ~/leafearn-bot
+node leafmine.js autopilot      # 🤖 সব অটো, প্রতিটা কাজ সার্ভারের আসল রিসেট-টাইমে (loop = একই জিনিস)
+node leafmine.js run all        # সব কিছু একবার (মিশন+স্পিন+গেম+অ্যাড+কুইক+ক্লেম+মাইন)
+node leafmine.js run adwatch    # অ্যাড-ভিউ (#1 ADSGRAM, #7 MONETAG) + কুইক-টাস্ক + পেন্ডিং গেম-ক্লেম + ADEXIUM চেষ্টা
+node leafmine.js run games      # ৫ গেমের সব বাকি স্লট (প্রতি গেমে ৬টা / রোলিং ২৪ঘ)
+node leafmine.js run mine       # স্টার-মাইন ট্যাপ + গিফট ক্লেম
+node leafmine.js run spin       # লাকি হুইল
+node leafmine.js run task       # মিশন (BIO / জয়েন / X)
+node leafmine.js redeem CODE    # 🎟 চ্যানেলের প্রোমো কোড (অ্যাড-গেট অটো)
+node leafmine.js loop-lite      # পুরনো লুপ (শুধু মাইন+স্পিন)
+```
+
+নতুন initData: টেলিগ্রাম থেকে লিংক কপি করে `tmp_url.txt`-এ পেস্ট করো → `node tmp_newinit.js`।
+
+## 🤖 অটোপাইলটের শিডিউল (সব সার্ভারের API থেকে নেওয়া)
+| কাজ | কখন চলে | সোর্স |
+|---|---|---|
+| মাইন-ট্যাপ | প্রতি ~৪০ মিনিটে (HEART: ২৫ ট্যাপ = গিফট) | `MineStatus.next_mine_at_ms` |
+| স্পিন | দিনে ১ বার | `SpinStatus.next_spin_ms` |
+| অ্যাড-ভিউ #1/#7 | **প্রতি ১২ ঘণ্টায় রিসেট** (দিনে ২ বার ≈ +1,100 × 2) | `Task.next_reset_at_ms` |
+| কুইক-টাস্ক | অফার এলেই (ঘণ্টায় চেক) | `QuickStatus.next_at_ms` |
+| গেম | স্লট খালি হলেই | `GameStatus.next_slot_at_ms` |
+| মিশন | প্রতি ৬ ঘণ্টায় (BIO/জয়েনের পর অটো ক্লেম) | — |
+
+## 🔓 অ্যাড-ভেরিফিকেশন ক্র্যাক
+1. **সাইনড `/adv`**: `raw` = HMAC-SHA256(ঘণ্টা-রোটেটেড কী, `searchParams`); `data_check_string` = base64url(সাজানো `k=v`, `\n`-জয়েন)
+2. অর্ডার: **`startAdView` → বিকন (render→show→7s→click→reward→return) → `completeAdView`**
+3. `completeAdView{token, ads_shown:1, ads_clicked:1, ads_offered:1, ad_id:<show record>}`
+4. **"ট্যাপ" কেন লাগে:** ফ্রন্টএন্ড `/event?type=Click` গুনে `adsClicked` পাঠায়; সার্ভার `clicked < shown` হলে **কম ক্রেডিট** দেয় (`nudgeEarnMore`: `credited < base`)। বট প্রতিবার click-বিকন দেয়, আর লগে `FULL ✓` / `PARTIAL ✗` দেখায়।
+
+## 🔗 কুইক-টাস্ক (frontend-হুবহু)
+`offer → open(open_url) = ট্যাপ → wait_sec → [reward_url] → claim{type, refId}`
+- **ADSGRAM_LINK** ✅ `refId` = open_url শর্ট-লিংকের স্লাগ
+- **WEBSITE** ✅ `refId` = অফারের `ref_id`
+- **COMMENT** ❌ গ্রুপে আসল মেসেজ লাগে (ইউজার-অ্যাকশন)
+- **ADEXIUM** ⚠️ নিচে দেখো
+- `QuickStatus.available` = আজকের বাকি **কোটা**, অফার না। আসল অফার আসে Adsgram-এর ইনভেন্টরি থেকে, মাঝে মাঝে।
+
+## 🎮 গেম
+| গেম | রিওয়ার্ড/গেম | নোট |
+|---|---|---|
+| Tic-Tac-Toe | 500 | — |
+| **Word Search** | **500 (HARD)** | ✅ **ফিক্স (২৬ সেপ্টে):** আগে `mode:"normal"` পাঠাত → reward 0। ফ্রন্টএন্ড `EASY/MEDIUM/HARD` পাঠায় (120/260/500)। এখন HARD (`WS_MODE` env দিয়ে বদলানো যায়) |
+| Snake | ~120-140 | শুধু `normal` মোড |
+| Leaf Shooter | ~105-207 | — |
+| Block Breaker | 550 | ~৯ মিনিট/গেম |
+
+## 🆕 ২৬ সেপ্টে: নতুন ডিপ্লয় ("ads fix") যাচাই
+- `tone.wasm` রিভ বদলেছে (`tone-d797d36e`) → পুরনো ক্যাশে "Please close and reopen Leaf to update" আসে → `config/tone.wasm` মুছলেই বট নতুনটা নামায়
+- বদলানো চাঙ্ক: Adsgram ট্র্যাকার (`3uf4p4jqwdu2c.js`), Membership চেক, টাস্কে `tries_used/tries_required`, Redeem-কোড অ্যাড-গেট, নতুন **TOWER** অ্যাড-প্রোভাইডার (uslads TowerAds, পোস্টব্যাক-ভিত্তিক; টাস্ক লিস্টে এখনও নেই)
+- **ADEXIUM উইজেট একই আছে** (v1.81, md5 মিলেছে)
+
+| অ্যাড পাথ | ফল |
+|---|---|
+| #1 ADSGRAM (5 ভিউ) | ✅ 5/5 |
+| #7 MONETAG (10 ভিউ) | ✅ 10/10 |
+| কুইক ADSGRAM_LINK | ✅ |
+| গেম-ক্লেম অ্যাড | ✅ 17/17 |
+| **#6 ADEXIUM / কুইক ADEXIUM** | ❌ নিচে দেখো |
+
+### ADEXIUM-এর অবস্থা
+- বিড-বডি এখন উইজেটের **হুবহু ১৮ ফিল্ড** (`from:"window"`, `platform`, `serialized`, `language`…)
+- **ডেটাসেন্টার IP (Google Cloud)-তে বিড সবসময় `[]`।** WARP (Cloudflare IPv6) দিয়ে মাঝে মাঝে ফিল আসে (~৩%, প্রতি ইউজারে ক্যাপ)
+- ফিল পেয়ে impression + tap দিলে আর "Tap the ad" আসে না, কিন্তু Leaf-এর ভেরিফিকেশন **"Something went wrong"** দেয়। কারণ: Leaf শুধু IPv4 (159.195.38.225), আর ফিল আসে শুধু IPv6-এ, তাই IP কখনো মেলে না
+- বট প্রতি ৪৫ মিনিটে চেষ্টা করে। ঐচ্ছিক: `ADX_PROXY=http://127.0.0.1:25345` (WARP: `~/warp/wireproxy -c ~/warp/wp.conf`)। **আসল ফোনে (মোবাইল IP) ADEXIUM ঠিকমতো চলে।**
+
+### সীমাবদ্ধতা (ইউজার-অ্যাকশন লাগে)
+- **#2 BIO (+200):** টেলিগ্রাম → Settings → Edit profile → Bio-তে পেস্ট করো:
+  `🍀 Best Earning Bot :- t.me/LeafEarnBot/app?startapp=1692540458`
+  তারপর বট নিজে ক্লেম করবে
+- **#11 Boinkers (+80):** "join the channel first": Boinkers অ্যাপ খুলে ওদের চ্যানেলে জয়েন করো
+- **COMMENT কুইক:** গ্রুপে মেসেজ (তুমি ফোন থেকে করেছ ✓)
+
+## ⚠️ সতর্কতা
+- **একই IP থেকে রেফারার+রেফারি দুই অ্যাকাউন্ট = ব্যান** (fahim: `Self Referral detected : Ip Matches`)। fahim ডিসেবলড
+- Withdraw বট করে না (OTP+ফোন লাগে)। লেজার: `node tmp_ledger.js`
+- `start_param` (রেফার আইডি) না থাকলে `api.init` ফেল করে
+
+## আর্কাইটেকচার
+- `leafmine.js`: CLI + সব ফ্লো (`flowAdcrack` = অ্যাড+কুইক+ক্লেম, `flowGames` = স্লট-লুপ)
+- `lib/autopilot.js`: 🤖 রিসেট-টাইম শিডিউলার
+- `lib/leafapi.js`: tone.wasm সাইনিং + gRPC-web (সব সার্ভিস, `redeemStartAdGate` সহ)
+- `lib/adsgram.js`: **ক্র্যাকড** Adsgram শো (`doAdShow`, `completeOneView`, `creditNote`) + ADEXIUM (`adexiumBid/adexiumTap/adexiumView`)
+- `lib/redeem.js`: রিডিম কোড (validate → startAdGate → শো → claim)
+- `lib/gamecore.js`: ৫ গেমের বট-প্লেয়ার (WS = HARD)
+- `config/accounts/*.json`: অ্যাকাউন্ট (initData, start_param)
