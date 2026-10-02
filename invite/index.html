@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LeafEarn — Invite & Earn</title>
+</head>
+<body style="margin:0;background:#0d1117;color:#e8eef5;font:16px/1.6 system-ui,-apple-system,'Segoe UI',Roboto,'Noto Sans Bengali',sans-serif">
+<div style="max-width:560px;margin:0 auto;padding:22px 18px 40px">
+
+  <!-- header -->
+  <div style="text-align:center;margin-bottom:20px">
+    <div style="width:74px;height:74px;margin:0 auto 12px;border-radius:20px;background:linear-gradient(135deg,#16a34a,#22c55e);display:flex;align-items:center;justify-content:center;font-size:38px;box-shadow:0 10px 30px rgba(34,197,94,.35)">🍃</div>
+    <h1 style="margin:0;font-size:26px;font-weight:800">LeafEarn — ফ্রি Telegram গিফট</h1>
+    <p style="margin:8px 0 0;color:#9fb0c0;font-size:14.5px">মাইন · অ্যাড · গেম খেলে collect করো <b style="color:#7dd3fc">Leaf</b>, redeem করো আসল Telegram Star গিফট</p>
+  </div>
+
+  <!-- CTA -->
+  <a href="https://t.me/LeafEarnBot/app?startapp=1692540458" target="_blank" rel="noopener"
+     style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#229af0,#2563eb);color:#fff;font-weight:800;font-size:17px;padding:16px;border-radius:14px;box-shadow:0 8px 24px rgba(37,99,235,.35)">
+    🚀 Telegram-এ শুরু করো (ফ্রি)
+  </a>
+  <div style="text-align:center;margin-top:8px;color:#6f7d8b;font-size:12.5px">আমার লিংক · কেউ জয়েন করলে আমি কমিশন পাই</div>
+
+  <!-- steps -->
+  <div style="background:#151e27;border:1px solid #22303d;border-radius:16px;padding:16px;margin-top:18px">
+    <div style="font-weight:700;margin-bottom:10px">🎯 কীভাবে আয় হয়</div>
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:9px"><span>⛏️</span><div><b>মাইনিং</b> — ট্যাপ করে প্রতিটা গিফট সাইকেল পূর্ণ করো, গিফট ক্লেইম (Heart/Teddy = 15⭐)</div></div>
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:9px"><span>📺</span><div><b>অ্যাড দেখো</b> — দিনে ২২টা ভিউ (Adsgram + Monetag) → প্রতিটা ভিউতে leaf</div></div>
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:9px"><span>🎮</span><div><b>গেম খেলো</b> — ৫টা গেম, প্রতিটা গেমে দিনে ৬ স্লট (Tic-Tac-Toe/Word Search = ৫০০ leaf)</div></div>
+    <div style="display:flex;gap:10px;align-items:flex-start;margin-bottom:9px"><span>🎡</span><div><b>লাকি স্পিন</b> — দিনে ১ বার, ১০০–৫০০ leaf</div></div>
+    <div style="display:flex;gap:10px;align-items:flex-start"><span>👥</span><div><b>রেফারেল</b> — বন্ধু জয়েন করলে তার আয়ের একটা অংশ তোমার কমিশন (আমার এখন ৩ active → ৩৭৭ leaf)</div></div>
+  </div>
+
+  <!-- invite tools -->
+  <div style="background:#151e27;border:1px solid #22303d;border-radius:16px;padding:16px;margin-top:14px">
+    <div style="font-weight:700;margin-bottom:10px">📤 শেয়ার করার লিংক</div>
+    <div id="linkbox" style="background:#0c141c;border:1px solid #2b3a49;border-radius:10px;padding:11px 12px;font-size:13px;color:#8fd4ff;word-break:break-all">https://t.me/LeafEarnBot/app?startapp=1692540458</div>
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+      <button onclick="copyLink()" id="copyBtn" style="flex:1;min-width:130px;padding:12px;border:0;border-radius:10px;background:#1d2733;color:#cfe0ee;font-weight:700;cursor:pointer">📋 কপি করো</button>
+      <a href="https://t.me/share/url?url=https%3A%2F%2Ft.me%2FLeafEarnBot%2Fapp%3Fstartapp%3D1692540458&text=%F0%9F%8D%83%20LeafEarn%20%E2%80%94%20%E0%A6%AB%E0%A7%8D%E0%A6%B0%E0%A6%BF%20%E0%A6%A4%E0%A7%87%E0%A6%B2%E0%A6%BF%E0%A6%97%E0%A7%8D%E0%A6%B0%E0%A6%BE%E0%A6%AE%20Star%20%E0%A6%97%E0%A6%BF%E0%A6%AB%E0%A6%9F%20%E0%A6%95%E0%A6%B2%E0%A7%87%E0%A6%95%E0%A7%8D%E0%A6%9F%20%E0%A6%95%E0%A6%B0%20%E2%80%94%20%E0%A6%AE%E0%A6%BE%E0%A6%87%E0%A6%A8%2C%20%E0%A6%85%E0%A7%8D%E0%A6%AF%E0%A6%BE%E0%A6%A1%2C%20%E0%A6%97%E0%A7%87%E0%A6%AE%20%E0%A6%96%E0%A7%87%E0%A6%B2%E0%A7%87%20%E0%A6%93%20day%20%E0%A7%A7%20%E0%A6%AC%E0%A6%BE%E0%A6%B0%20%E0%A6%B8%E0%A7%8D%E0%A6%AA%E0%A6%BF%E0%A6%A8%20%E2%80%94%20%E0%A6%AB%E0%A7%8D%E0%A6%B0%E0%A6%BF%21" target="_blank" rel="noopener"
+         style="flex:1;min-width:130px;text-align:center;text-decoration:none;padding:12px;border-radius:10px;background:#229af0;color:#fff;font-weight:700">✈️ Telegram-এ শেয়ার</a>
+    </div>
+  </div>
+
+  <!-- message template -->
+  <div style="background:#151e27;border:1px solid #22303d;border-radius:16px;padding:16px;margin-top:14px">
+    <div style="font-weight:700;margin-bottom:8px">💬 গ্রুপে পোস্ট করার রেডি টেক্সট</div>
+    <pre id="msg" style="margin:0;white-space:pre-wrap;background:#0c141c;border:1px solid #2b3a49;border-radius:10px;padding:12px;font-size:13.5px;color:#cfe0ee;font-family:inherit">🍃 LeafEarn — ফ্রি Telegram Star গিফট!
+
+✔ মাইন করে গিফট calm — Heart/Teddy (15⭐)
+✔ দিনে ২২টা অ্যাড দেখা যায় — প্রতি ভিউতে leaf
+✔ ৫টা গেম, প্রতিটা ৬ স্লট (৫০০ leaf পর্যন্ত)
+✔ দিনে ১ বার লাকি স্পিন (৫০০ leaf পর্যন্ত)
+
+সম্পূর্ণ ফ্রি, শুধু Telegram খুলে স্টার্ট করো 👇
+https://t.me/LeafEarnBot/app?startapp=1692540458</pre>
+    <button onclick="copyMsg()" style="margin-top:10px;width:100%;padding:12px;border:0;border-radius:10px;background:#1d2733;color:#cfe0ee;font-weight:700;cursor:pointer">💬 টেক্সট কপি করো</button>
+  </div>
+
+  <div style="color:#5d6b78;font-size:12px;margin-top:16px;text-align:center">
+    সৎ নিয়ম: প্রত্যেকে নিজে ক্লিক করে জয়েন করবে · একজন = একটা অ্যাকাউন্ট · জোর করে বসানো রেফারেল = ব্যান
+  </div>
+</div>
+
+<script>
+function flash(btn, text) {
+  const old = btn.textContent; btn.textContent = text;
+  setTimeout(() => { btn.textContent = old; }, 1600);
+}
+function copyLink() {
+  const t = 'https://t.me/LeafEarnBot/app?startapp=1692540458';
+  (navigator.clipboard ? navigator.clipboard.writeText(t) : Promise.reject()).then(
+    () => flash(document.getElementById('copyBtn'), '✅ কপি হয়েছে!'),
+    () => { const r = document.createRange(); r.selectNode(document.getElementById('linkbox')); getSelection().removeAllRanges(); getSelection().addRange(r); document.execCommand('copy'); flash(document.getElementById('copyBtn'), '✅ কপি হয়েছে!'); }
+  );
+}
+function copyMsg() {
+  const el = document.getElementById('msg');
+  const btn = event.target;
+  (navigator.clipboard ? navigator.clipboard.writeText(el.textContent) : Promise.reject()).then(
+    () => flash(btn, '✅ কপি হয়েছে!'),
+    () => { const r = document.createRange(); r.selectNode(el); getSelection().removeAllRanges(); getSelection().addRange(r); document.execCommand('copy'); flash(btn, '✅ কপি হয়েছে!'); }
+  );
+}
+</script>
+</body>
+</html>
