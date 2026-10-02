@@ -1,0 +1,54 @@
+
+  LEAF EARN MINER · MULTI  
+[2026-09-29 02:40:22] ✔ auth ✓ Abdur081 · 🌿 6189 leaf · role=USER
+[2026-09-29 02:40:23] ℹ ▶ Tic-Tac-Toe playing... (slots 1/6)
+[2026-09-29 02:40:29] ✔ Tic-Tac-Toe: game over — score=0 reward=500 (ok)
+[2026-09-29 02:40:41] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:40:42] ✔ Tic-Tac-Toe 🎉 claimed +500 leaf (base 500, divisor 1) · balance 6689
+[2026-09-29 02:40:45] ℹ ▶ Tic-Tac-Toe playing... (slots 2/6)
+[2026-09-29 02:40:53] ✔ Tic-Tac-Toe: game over — score=0 reward=50 (ok)
+[2026-09-29 02:41:06] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:41:06] ✔ Tic-Tac-Toe 🎉 claimed +50 leaf (base 50, divisor 1) · balance 6739
+[2026-09-29 02:41:10] ℹ ▶ Tic-Tac-Toe playing... (slots 3/6)
+[2026-09-29 02:41:16] ✔ Tic-Tac-Toe: game over — score=0 reward=500 (ok)
+[2026-09-29 02:41:28] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:41:29] ✔ Tic-Tac-Toe 🎉 claimed +500 leaf (base 500, divisor 1) · balance 7239
+[2026-09-29 02:41:34] ℹ ▶ Tic-Tac-Toe playing... (slots 4/6)
+[2026-09-29 02:41:40] ✔ Tic-Tac-Toe: game over — score=0 reward=500 (ok)
+[2026-09-29 02:41:52] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:41:52] ✔ Tic-Tac-Toe 🎉 claimed +500 leaf (base 500, divisor 1) · balance 7739
+[2026-09-29 02:41:57] ℹ ▶ Tic-Tac-Toe playing... (slots 5/6)
+[2026-09-29 02:42:05] ✔ Tic-Tac-Toe: game over — score=0 reward=50 (ok)
+[2026-09-29 02:42:18] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:42:18] ✔ Tic-Tac-Toe 🎉 claimed +50 leaf (base 50, divisor 1) · balance 7789
+[2026-09-29 02:42:22] ⚠ Tic-Tac-Toe: slot ends (6/6) — next 23h 57m
+[2026-09-29 02:42:22] ℹ ▶ Word Search playing... (slots 0/6)
+[2026-09-29 02:43:06] ✔ Word Search: game over — score=7 reward=500 (ok)
+[2026-09-29 02:43:18] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:43:19] ✔ Word Search 🎉 claimed +500 leaf (base 500, divisor 1) · balance 8289
+[2026-09-29 02:43:22] ℹ ▶ Word Search playing... (slots 1/6)
+[2026-09-29 02:44:05] ✔ Word Search: game over — score=7 reward=500 (ok)
+[2026-09-29 02:44:17] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:44:18] ✔ Word Search 🎉 claimed +500 leaf (base 500, divisor 1) · balance 8789
+[2026-09-29 02:44:23] ℹ ▶ Word Search playing... (slots 2/6)
+[2026-09-29 02:45:07] ✔ Word Search: game over — score=7 reward=500 (ok)
+[2026-09-29 02:45:19] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:45:20] ✔ Word Search 🎉 claimed +500 leaf (base 500, divisor 1) · balance 9289
+[2026-09-29 02:45:23] ℹ ▶ Word Search playing... (slots 3/6)
+[2026-09-29 02:46:08] ✔ Word Search: game over — score=7 reward=500 (ok)
+[2026-09-29 02:46:20] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:46:21] ✔ Word Search 🎉 claimed +500 leaf (base 500, divisor 1) · balance 9789
+[2026-09-29 02:46:24] ℹ ▶ Word Search playing... (slots 4/6)
+[2026-09-29 02:47:07] ✔ Word Search: game over — score=7 reward=500 (ok)
+[2026-09-29 02:47:19] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:47:20] ✔ Word Search 🎉 claimed +500 leaf (base 500, divisor 1) · balance 10289
+[2026-09-29 02:47:25] ℹ ▶ Word Search playing... (slots 5/6)
+[2026-09-29 02:48:09] ✔ Word Search: game over — score=7 reward=500 (ok)
+[2026-09-29 02:48:22] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:48:22] ✔ Word Search 🎉 claimed +500 leaf (base 500, divisor 1) · balance 10789
+[2026-09-29 02:48:25] ⚠ Word Search: slot ends (6/6) — next 23h 53m
+[2026-09-29 02:48:25] ℹ ▶ Snake playing... (slots 0/6)
+[2026-09-29 02:49:20] ✔ Snake: game over — score=14 reward=140 (ok)
+[2026-09-29 02:49:32] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:49:32] ✔ Snake 🎉 claimed +140 leaf (base 140, divisor 1) · balance 10929
+[2026-09-29 02:49:36] ℹ ▶ Snake playing... (slo
