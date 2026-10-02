@@ -1,0 +1,42 @@
+
+[45m[1m  LEAF EARN MINER · MULTI  [0m
+[2026-09-29 02:26:00] [36mℹ[0m adview "Watch Ads & Earn #2" (MONETAG) — 8 ভিউ
+[2026-09-29 02:26:15] [32m✔[0m Watch Ads & Earn #2 1/8  ✅ +80 (base 80, div 1, tap 0/0 → FULL ✓) bal=3859
+[2026-09-29 02:26:33] [32m✔[0m Watch Ads & Earn #2 2/8  ✅ +70 (base 70, div 1, tap 0/0 → FULL ✓) bal=3929
+[2026-09-29 02:26:51] [32m✔[0m Watch Ads & Earn #2 3/8  ✅ +60 (base 60, div 1, tap 0/0 → FULL ✓) bal=3989
+[2026-09-29 02:27:08] [32m✔[0m Watch Ads & Earn #2 4/8  ✅ +50 (base 50, div 1, tap 0/0 → FULL ✓) bal=4039
+[2026-09-29 02:27:26] [32m✔[0m Watch Ads & Earn #2 5/8  ✅ +40 (base 40, div 1, tap 0/0 → FULL ✓) bal=4079
+[2026-09-29 02:27:43] [32m✔[0m Watch Ads & Earn #2 6/8  ✅ +30 (base 30, div 1, tap 0/0 → FULL ✓) bal=4109
+[2026-09-29 02:28:01] [32m✔[0m Watch Ads & Earn #2 7/8  ✅ +20 (base 20, div 1, tap 0/0 → FULL ✓) bal=4129
+[2026-09-29 02:28:18] [32m✔[0m Watch Ads & Earn #2 8/8  ✅ +10 (base 10, div 1, tap 0/0 → FULL ✓) bal=4139
+[2026-09-29 02:28:34] [33m⚠[0m ADEXIUM #6: Something went wrong — please reopen Leaf
+[2026-09-29 02:28:47] [33m⚠[0m LINK "Click & Earn" 1/3: Something went wrong — please reopen Leaf
+[2026-09-29 02:29:08] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 4239)
+[2026-09-29 02:29:30] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 4339)
+[2026-09-29 02:29:53] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 4439)
+
+[45m[1m  ⚠ QUICK SAFETY CHECK দরকার (main)  [0m
+[33m⚠[0m Leaf সার্ভার একটা ৪-সংখ্যার কোড চাইছে (leaf.v1.QuickTaskService/Claim)। বট এখন কোড পাঠাতে বলছে…
+[33m⚠[0m Telegram-এ @LeafEarnBot-এর মেসেজে কোড আসবে → চালাও:  node leafmine.js safety <CODE> --only main
+[33m⚠[0m (অথবা ফোনে Leaf অ্যাপ খুলে কোডটা দিলেও হবে — বট নিজে থেকে আবার চালু হবে)
+
+
+[45m[1m  ⏳ SAFETY CODE দরকার  [0m
+[33m⚠[0m সার্ভার "leaf.v1.QuickTaskService/Claim" আটকে দিয়েছে। Telegram-এ @LeafEarnBot-এর মেসেজে ৪-ডিজিট কোড এসেছে (অথবা ফোনে Leaf অ্যাপ খুলে কোড দিন)। বট 40 মিনিট অপেক্ষা করবে…
+
+[36mℹ[0m কোডের মেয়াদ 300s বাকি — অপেক্ষা করছি…
+[32m✔[0m safety ✓ passed — কাজ আবার শুরু হচ্ছে
+
+[2026-09-29 02:30:45] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 4589)
+[2026-09-29 02:31:08] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 4689)
+[2026-09-29 02:31:30] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 4789)
+[2026-09-29 02:31:53] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 4889)
+[2026-09-29 02:32:16] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 4989)
+[2026-09-29 02:32:38] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 5089)
+[2026-09-29 02:33:01] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 5189)
+[2026-09-29 02:33:24] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 5289)
+[2026-09-29 02:33:47] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 5389)
+[2026-09-29 02:34:09] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 5489)
+[2026-09-29 02:34:32] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 5589)
+[2026-09-29 02:34:55] [32m✔[0m quick ADSGRAM_LINK +100 ✓ (bal 5689)
+[2026-09-29 02:34:56] [32m✔[0m adcrack শেষ — views ✓8, claims ✓15
