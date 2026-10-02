@@ -1,0 +1,416 @@
+[2026-09-29 02:12:56] ✔ auth ✓ Abdur081 · 🌿 2309 leaf · role=USER
+[2026-09-29 02:12:56] ℹ tasks: total=11 pending=7
+[2026-09-29 02:12:56] ℹ ad-task "Watch Ads & Earn #1" (0/7) → adwatch সামলাবে
+[2026-09-29 02:12:58] ℹ task "Add Leaf to your bio" (BIO) +200 · try 0/1
+[2026-09-29 02:13:02] ⚠ task "Add Leaf to your bio": safety_check_required → Telegram bio-তে এই লাইনটা বসাও: 🍀 Best Earning Bot :- t.me/LeafEarnBot/app?startapp=1692540458
+[2026-09-29 02:13:04] ℹ ad-task "Watch Ads & Earn #2" (0/10) → adwatch সামলাবে
+[2026-09-29 02:13:06] ℹ ad-task "Watch Ads & Earn #3" (0/5) → adwatch সামলাবে
+[2026-09-29 02:13:07] ℹ task "Open Boinkers and win GRAM" (TELEGRAM) +80 · try 0/1
+[2026-09-29 02:13:12] ⚠ task "Open Boinkers and win GRAM": safety_check_required → ফোনে একবার খুলে দেখো: https://t.me/boinker_bot/boinkapp?startapp=campLeaf_lesha
+[2026-09-29 02:13:15] ℹ task "Spin Boinkers slot 20 times" (OTHERS) +200 · try 0/1
+[2026-09-29 02:13:20] ⚠ task "Spin Boinkers slot 20 times": safety_check_required
+[2026-09-29 02:13:22] ℹ ad-task "Click & Earn" (0/3) → adwatch সামলাবে
+[2026-09-29 02:13:25] ℹ task summary: ok=0 fail=3 skip=4
+[2026-09-29 02:13:25] ✔ auth ✓ Abdur081 · 🌿 2309 leaf · role=USER
+[2026-09-29 02:13:26] ℹ → SPIN ...
+[2026-09-29 02:13:42] ✘ spin fail: FAILED_PRECONDITION safety_check_required
+[2026-09-29 02:17:33] ✔ ✅ Safety Check পাস! +50 leaf — বট আবার স্বাভাবিকভাবে চলবে
+[2026-09-29 02:17:36] ✔ auth ✓ Abdur081 · 🌿 2359 leaf · role=USER
+[2026-09-29 02:17:36] ℹ tasks: total=11 pending=7
+[2026-09-29 02:17:36] ℹ ad-task "Watch Ads & Earn #1" (0/7) → adwatch সামলাবে
+[2026-09-29 02:17:38] ℹ task "Add Leaf to your bio" (BIO) +200 · try 0/1
+[2026-09-29 02:17:41] ⚠ task "Add Leaf to your bio": bio doesn't have the link yet → Telegram bio-তে এই লাইনটা বসাও: 🍀 Best Earning Bot :- t.me/LeafEarnBot/app?startapp=1692540458
+[2026-09-29 02:17:44] ℹ ad-task "Watch Ads & Earn #2" (0/10) → adwatch সামলাবে
+[2026-09-29 02:17:47] ℹ ad-task "Watch Ads & Earn #3" (0/5) → adwatch সামলাবে
+[2026-09-29 02:17:49] ℹ task "Open Boinkers and win GRAM" (TELEGRAM) +80 · try 0/1
+[2026-09-29 02:17:54] ⚠ task "Open Boinkers and win GRAM": join the channel first → আগে জয়েন করো: https://t.me/boinker_bot/boinkapp?startapp=campLeaf_lesha
+[2026-09-29 02:17:56] ℹ task "Spin Boinkers slot 20 times" (OTHERS) +200 · try 0/1
+[2026-09-29 02:18:01] ⚠ task "Spin Boinkers slot 20 times": Couldn't verify with the partner right now — try again in a minute
+[2026-09-29 02:18:03] ℹ ad-task "Click & Earn" (0/3) → adwatch সামলাবে
+[2026-09-29 02:18:05] ℹ task summary: ok=0 fail=3 skip=4
+[2026-09-29 02:18:05] ✔ auth ✓ Abdur081 · 🌿 2359 leaf · role=USER
+[2026-09-29 02:18:05] ℹ → SPIN ...
+[2026-09-29 02:18:22] ✔ spin ✓ slice=2 +500 leaf · balance=2859 · পরের spin 24h 00m পরে
+[2026-09-29 02:18:26] ℹ adview "Watch Ads & Earn #1" (ADSGRAM) — 7 ভিউ
+[2026-09-29 02:18:41] ✔ Watch Ads & Earn #1 1/7  ✅ +200 (base 200, div 1, tap 1/1 → FULL ✓) bal=3059
+[2026-09-29 02:18:58] ✔ Watch Ads & Earn #1 2/7  ✅ +150 (base 150, div 1, tap 1/1 → FULL ✓) bal=3209
+[2026-09-29 02:19:15] ✔ Watch Ads & Earn #1 3/7  ✅ +100 (base 100, div 1, tap 1/1 → FULL ✓) bal=3309
+[2026-09-29 02:19:32] ✔ Watch Ads & Earn #1 4/7  ✅ +70 (base 70, div 1, tap 1/1 → FULL ✓) bal=3379
+[2026-09-29 02:19:50] ✔ Watch Ads & Earn #1 5/7  ✅ +60 (base 60, div 1, tap 1/1 → FULL ✓) bal=3439
+[2026-09-29 02:20:08] ✔ Watch Ads & Earn #1 6/7  ✅ +50 (base 50, div 1, tap 1/1 → FULL ✓) bal=3489
+[2026-09-29 02:20:25] ✔ Watch Ads & Earn #1 7/7  ✅ +50 (base 50, div 1, tap 1/1 → FULL ✓) bal=3539
+[2026-09-29 02:20:27] ℹ adview "Watch Ads & Earn #2" (MONETAG) — 10 ভিউ
+[2026-09-29 02:20:43] ✔ Watch Ads & Earn #2 1/10  ✅ +100 (base 100, div 1, tap 0/0 → FULL ✓) bal=3639
+[2026-09-29 02:21:00] ✔ Watch Ads & Earn #2 2/10  ✅ +90 (base 90, div 1, tap 0/0 → FULL ✓) bal=3729
+[2026-09-29 02:21:02] ⚠ Watch Ads & Earn #2 ভিউ 3 থামল: safety_check_required
+[2026-09-29 02:21:02] ⚠ ADEXIUM #6: startAdView: safety_check_required
+[2026-09-29 02:21:03] ⚠ LINK "Click & Earn": safety_check_required
+[2026-09-29 02:21:36] ⚠ quick ADSGRAM_LINK: safety_check_required
+[2026-09-29 02:21:37] ✔ adcrack শেষ — views ✓9, claims ✓0
+[2026-09-29 02:25:56] ✔ ✅ Safety Check পাস! +50 leaf — বট আবার স্বাভাবিকভাবে চলবে
+[2026-09-29 02:26:00] ℹ adview "Watch Ads & Earn #2" (MONETAG) — 8 ভিউ
+[2026-09-29 02:26:15] ✔ Watch Ads & Earn #2 1/8  ✅ +80 (base 80, div 1, tap 0/0 → FULL ✓) bal=3859
+[2026-09-29 02:26:33] ✔ Watch Ads & Earn #2 2/8  ✅ +70 (base 70, div 1, tap 0/0 → FULL ✓) bal=3929
+[2026-09-29 02:26:51] ✔ Watch Ads & Earn #2 3/8  ✅ +60 (base 60, div 1, tap 0/0 → FULL ✓) bal=3989
+[2026-09-29 02:27:08] ✔ Watch Ads & Earn #2 4/8  ✅ +50 (base 50, div 1, tap 0/0 → FULL ✓) bal=4039
+[2026-09-29 02:27:26] ✔ Watch Ads & Earn #2 5/8  ✅ +40 (base 40, div 1, tap 0/0 → FULL ✓) bal=4079
+[2026-09-29 02:27:43] ✔ Watch Ads & Earn #2 6/8  ✅ +30 (base 30, div 1, tap 0/0 → FULL ✓) bal=4109
+[2026-09-29 02:28:01] ✔ Watch Ads & Earn #2 7/8  ✅ +20 (base 20, div 1, tap 0/0 → FULL ✓) bal=4129
+[2026-09-29 02:28:18] ✔ Watch Ads & Earn #2 8/8  ✅ +10 (base 10, div 1, tap 0/0 → FULL ✓) bal=4139
+[2026-09-29 02:28:34] ⚠ ADEXIUM #6: Something went wrong — please reopen Leaf
+[2026-09-29 02:28:47] ⚠ LINK "Click & Earn" 1/3: Something went wrong — please reopen Leaf
+[2026-09-29 02:29:08] ✔ quick ADSGRAM_LINK +100 ✓ (bal 4239)
+[2026-09-29 02:29:30] ✔ quick ADSGRAM_LINK +100 ✓ (bal 4339)
+[2026-09-29 02:29:53] ✔ quick ADSGRAM_LINK +100 ✓ (bal 4439)
+[2026-09-29 02:30:38] ✔ ✅ Safety Check পাস! +50 leaf — বট আবার স্বাভাবিকভাবে চলবে
+[2026-09-29 02:30:45] ✔ quick ADSGRAM_LINK +100 ✓ (bal 4589)
+[2026-09-29 02:31:08] ✔ quick ADSGRAM_LINK +100 ✓ (bal 4689)
+[2026-09-29 02:31:30] ✔ quick ADSGRAM_LINK +100 ✓ (bal 4789)
+[2026-09-29 02:31:53] ✔ quick ADSGRAM_LINK +100 ✓ (bal 4889)
+[2026-09-29 02:32:16] ✔ quick ADSGRAM_LINK +100 ✓ (bal 4989)
+[2026-09-29 02:32:38] ✔ quick ADSGRAM_LINK +100 ✓ (bal 5089)
+[2026-09-29 02:33:01] ✔ quick ADSGRAM_LINK +100 ✓ (bal 5189)
+[2026-09-29 02:33:24] ✔ quick ADSGRAM_LINK +100 ✓ (bal 5289)
+[2026-09-29 02:33:47] ✔ quick ADSGRAM_LINK +100 ✓ (bal 5389)
+[2026-09-29 02:34:09] ✔ quick ADSGRAM_LINK +100 ✓ (bal 5489)
+[2026-09-29 02:34:32] ✔ quick ADSGRAM_LINK +100 ✓ (bal 5589)
+[2026-09-29 02:34:55] ✔ quick ADSGRAM_LINK +100 ✓ (bal 5689)
+[2026-09-29 02:34:56] ✔ adcrack শেষ — views ✓8, claims ✓15
+[2026-09-29 02:36:15] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:36:15] ℹ → MINE (tap 19/25) ...
+[2026-09-29 02:36:28] ✔ mine ✓ +12 pts (1 divisor) · 237/300 pts · next 03:16
+[2026-09-29 02:36:32] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:36:32] ℹ ⏳ পরের mine 39m 57s পরে (03:16)
+[2026-09-29 02:36:35] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:36:35] ℹ ⏳ পরের mine 39m 53s পরে (03:16)
+[2026-09-29 02:36:39] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:36:39] ℹ ⏳ পরের mine 39m 49s পরে (03:16)
+[2026-09-29 02:36:43] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:36:43] ℹ ⏳ পরের mine 39m 45s পরে (03:16)
+[2026-09-29 02:36:47] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:36:47] ℹ ⏳ পরের mine 39m 42s পরে (03:16)
+[2026-09-29 02:36:50] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:36:50] ℹ ⏳ পরের mine 39m 38s পরে (03:16)
+[2026-09-29 02:36:54] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:36:54] ℹ ⏳ পরের mine 39m 34s পরে (03:16)
+[2026-09-29 02:36:58] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:36:58] ℹ ⏳ পরের mine 39m 30s পরে (03:16)
+[2026-09-29 02:37:01] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:37:02] ℹ ⏳ পরের mine 39m 27s পরে (03:16)
+[2026-09-29 02:37:05] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:37:05] ℹ ⏳ পরের mine 39m 23s পরে (03:16)
+[2026-09-29 02:37:09] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:37:09] ℹ ⏳ পরের mine 39m 19s পরে (03:16)
+[2026-09-29 02:37:13] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:37:13] ℹ ⏳ পরের mine 39m 16s পরে (03:16)
+[2026-09-29 02:37:16] ✔ auth ✓ Abdur081 · 🌿 5689 leaf · role=USER
+[2026-09-29 02:37:17] ℹ ⏳ পরের mine 39m 12s পরে (03:16)
+[2026-09-29 02:38:37] ⚠ ADEXIUM #6: Something went wrong — please reopen Leaf
+[2026-09-29 02:38:38] ℹ LINK ↳ land 200 https://hai8g.com/4/11808215
+[2026-09-29 02:38:38] ℹ LINK ↳ redir 200 https://hai8g.com/partitial/5117867?var=11808215&ab2r=0&rhd=false&sf=1
+[2026-09-29 02:38:38] ℹ LINK ↳ land2 200 https://nennne.cc/
+[2026-09-29 02:38:51] ⚠ LINK "Click & Earn" 1/3: Something went wrong — please reopen Leaf
+[2026-09-29 02:39:05] ✔ adcrack শেষ — views ✓0, claims ✓0
+[2026-09-29 02:40:22] ✔ auth ✓ Abdur081 · 🌿 6189 leaf · role=USER
+[2026-09-29 02:40:23] ℹ ▶ Tic-Tac-Toe playing... (slots 1/6)
+[2026-09-29 02:40:29] ✔ Tic-Tac-Toe: game over — score=0 reward=500 (ok)
+[2026-09-29 02:40:41] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:40:42] ✔ Tic-Tac-Toe 🎉 claimed +500 leaf (base 500, divisor 1) · balance 6689
+[2026-09-29 02:40:45] ℹ ▶ Tic-Tac-Toe playing... (slots 2/6)
+[2026-09-29 02:40:53] ✔ Tic-Tac-Toe: game over — score=0 reward=50 (ok)
+[2026-09-29 02:41:06] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:41:06] ✔ Tic-Tac-Toe 🎉 claimed +50 leaf (base 50, divisor 1) · balance 6739
+[2026-09-29 02:41:10] ℹ ▶ Tic-Tac-Toe playing... (slots 3/6)
+[2026-09-29 02:41:16] ✔ Tic-Tac-Toe: game over — score=0 reward=500 (ok)
+[2026-09-29 02:41:28] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:41:29] ✔ Tic-Tac-Toe 🎉 claimed +500 leaf (base 500, divisor 1) · balance 7239
+[2026-09-29 02:41:34] ℹ ▶ Tic-Tac-Toe playing... (slots 4/6)
+[2026-09-29 02:41:40] ✔ Tic-Tac-Toe: game over — score=0 reward=500 (ok)
+[2026-09-29 02:41:52] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:41:52] ✔ Tic-Tac-Toe 🎉 claimed +500 leaf (base 500, divisor 1) · balance 7739
+[2026-09-29 02:41:57] ℹ ▶ Tic-Tac-Toe playing... (slots 5/6)
+[2026-09-29 02:42:05] ✔ Tic-Tac-Toe: game over — score=0 reward=50 (ok)
+[2026-09-29 02:42:18] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:42:18] ✔ Tic-Tac-Toe 🎉 claimed +50 leaf (base 50, divisor 1) · balance 7789
+[2026-09-29 02:42:22] ⚠ Tic-Tac-Toe: slot ends (6/6) — next 23h 57m
+[2026-09-29 02:42:22] ℹ ▶ Word Search playing... (slots 0/6)
+[2026-09-29 02:43:06] ✔ Word Search: game over — score=7 reward=500 (ok)
+[2026-09-29 02:43:18] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:43:19] ✔ Word Search 🎉 claimed +500 leaf (base 500, divisor 1) · balance 8289
+[2026-09-29 02:43:22] ℹ ▶ Word Search playing... (slots 1/6)
+[2026-09-29 02:44:05] ✔ Word Search: game over — score=7 reward=500 (ok)
+[2026-09-29 02:44:17] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:44:18] ✔ Word Search 🎉 claimed +500 leaf (base 500, divisor 1) · balance 8789
+[2026-09-29 02:44:23] ℹ ▶ Word Search playing... (slots 2/6)
+[2026-09-29 02:45:07] ✔ Word Search: game over — score=7 reward=500 (ok)
+[2026-09-29 02:45:19] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:45:20] ✔ Word Search 🎉 claimed +500 leaf (base 500, divisor 1) · balance 9289
+[2026-09-29 02:45:23] ℹ ▶ Word Search playing... (slots 3/6)
+[2026-09-29 02:46:08] ✔ Word Search: game over — score=7 reward=500 (ok)
+[2026-09-29 02:46:20] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:46:21] ✔ Word Search 🎉 claimed +500 leaf (base 500, divisor 1) · balance 9789
+[2026-09-29 02:46:24] ℹ ▶ Word Search playing... (slots 4/6)
+[2026-09-29 02:47:07] ✔ Word Search: game over — score=7 reward=500 (ok)
+[2026-09-29 02:47:19] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:47:20] ✔ Word Search 🎉 claimed +500 leaf (base 500, divisor 1) · balance 10289
+[2026-09-29 02:47:25] ℹ ▶ Word Search playing... (slots 5/6)
+[2026-09-29 02:48:09] ✔ Word Search: game over — score=7 reward=500 (ok)
+[2026-09-29 02:48:22] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:48:22] ✔ Word Search 🎉 claimed +500 leaf (base 500, divisor 1) · balance 10789
+[2026-09-29 02:48:25] ⚠ Word Search: slot ends (6/6) — next 23h 53m
+[2026-09-29 02:48:25] ℹ ▶ Snake playing... (slots 0/6)
+[2026-09-29 02:49:20] ✔ Snake: game over — score=14 reward=140 (ok)
+[2026-09-29 02:49:32] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:49:32] ✔ Snake 🎉 claimed +140 leaf (base 140, divisor 1) · balance 10929
+[2026-09-29 02:49:36] ℹ ▶ Snake playing... (slots 1/6)
+[2026-09-29 02:50:18] ✔ Snake: game over — score=10 reward=100 (ok)
+[2026-09-29 02:50:30] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:50:31] ✔ Snake 🎉 claimed +100 leaf (base 100, divisor 1) · balance 11029
+[2026-09-29 02:50:36] ℹ ▶ Snake playing... (slots 2/6)
+[2026-09-29 02:51:12] ✔ Snake: game over — score=9 reward=90 (ok)
+[2026-09-29 02:51:24] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:51:24] ✔ Snake 🎉 claimed +90 leaf (base 90, divisor 1) · balance 11119
+[2026-09-29 02:51:28] ℹ ▶ Snake playing... (slots 3/6)
+[2026-09-29 02:52:06] ✔ Snake: game over — score=10 reward=100 (ok)
+[2026-09-29 02:52:18] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:52:19] ✔ Snake 🎉 claimed +100 leaf (base 100, divisor 1) · balance 11219
+[2026-09-29 02:52:24] ℹ ▶ Snake playing... (slots 4/6)
+[2026-09-29 02:53:12] ✔ Snake: game over — score=13 reward=130 (ok)
+[2026-09-29 02:53:25] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:53:25] ✔ Snake 🎉 claimed +130 leaf (base 130, divisor 1) · balance 11349
+[2026-09-29 02:53:29] ℹ ▶ Snake playing... (slots 5/6)
+[2026-09-29 02:54:22] ✔ Snake: game over — score=13 reward=130 (ok)
+[2026-09-29 02:54:34] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:54:34] ✔ Snake 🎉 claimed +130 leaf (base 130, divisor 1) · balance 11479
+[2026-09-29 02:54:38] ⚠ Snake: slot ends (6/6) — next 23h 53m
+[2026-09-29 02:54:38] ℹ ▶ Leaf Shooter playing... (slots 0/6)
+[2026-09-29 02:55:26] ✔ Leaf Shooter: game over — score=6060 reward=106 (ok)
+[2026-09-29 02:55:37] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:55:38] ✔ Leaf Shooter 🎉 claimed +106 leaf (base 106, divisor 1) · balance 11585
+[2026-09-29 02:55:42] ℹ ▶ Leaf Shooter playing... (slots 1/6)
+[2026-09-29 02:56:30] ✔ Leaf Shooter: game over — score=5900 reward=106 (ok)
+[2026-09-29 02:56:42] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:56:43] ✔ Leaf Shooter 🎉 claimed +106 leaf (base 106, divisor 1) · balance 11691
+[2026-09-29 02:56:46] ℹ ▶ Leaf Shooter playing... (slots 2/6)
+[2026-09-29 02:57:36] ✔ Leaf Shooter: game over — score=6220 reward=206 (ok)
+[2026-09-29 02:57:48] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:57:49] ✔ Leaf Shooter 🎉 claimed +206 leaf (base 206, divisor 1) · balance 11897
+[2026-09-29 02:57:54] ℹ ▶ Leaf Shooter playing... (slots 3/6)
+[2026-09-29 02:58:43] ✔ Leaf Shooter: game over — score=5900 reward=206 (ok)
+[2026-09-29 02:58:56] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 02:58:56] ✔ Leaf Shooter 🎉 claimed +206 leaf (base 206, divisor 1) · balance 12103
+[2026-09-29 02:59:01] ℹ ▶ Leaf Shooter playing... (slots 4/6)
+[2026-09-29 02:59:49] ✔ Leaf Shooter: game over — score=5640 reward=206 (ok)
+[2026-09-29 03:00:02] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 03:00:02] ✔ Leaf Shooter 🎉 claimed +206 leaf (base 206, divisor 1) · balance 12309
+[2026-09-29 03:00:06] ℹ ▶ Leaf Shooter playing... (slots 5/6)
+[2026-09-29 03:00:54] ✔ Leaf Shooter: game over — score=5780 reward=106 (ok)
+[2026-09-29 03:01:06] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 03:01:07] ✔ Leaf Shooter 🎉 claimed +106 leaf (base 106, divisor 1) · balance 12415
+[2026-09-29 03:01:12] ⚠ Leaf Shooter: slot ends (6/6) — next 23h 53m
+[2026-09-29 03:01:12] ℹ ▶ Block Breaker playing... (slots 0/6)
+[2026-09-29 03:09:02] ✔ auth ✓ Abdur081 · 🌿 12415 leaf · role=USER
+[2026-09-29 03:09:02] ℹ ⏳ পরের mine 7m 26s পরে (03:16)
+[2026-09-29 03:09:06] ✔ auth ✓ Abdur081 · 🌿 12415 leaf · role=USER
+[2026-09-29 03:09:06] ℹ ⏳ পরের mine 7m 22s পরে (03:16)
+[2026-09-29 03:09:21] ⚠ ADEXIUM #6: Something went wrong — please reopen Leaf
+[2026-09-29 03:09:21] ℹ LINK ↳ land 200 https://hai8g.com/4/11808215
+[2026-09-29 03:09:22] ℹ LINK ↳ redir 200 https://hai8g.com/partitial/5117867?var=11808215&ab2r=0&rhd=false&sf=1
+[2026-09-29 03:09:22] ℹ LINK ↳ land2 200 https://nennne.cc/
+[2026-09-29 03:09:37] ⚠ LINK "Click & Earn" 1/3: Something went wrong — please reopen Leaf
+[2026-09-29 03:09:51] ✔ adcrack শেষ — views ✓0, claims ✓0
+[2026-09-29 03:09:52] ⚠ Tic-Tac-Toe: slot ends (6/6) — next 23h 29m
+[2026-09-29 03:09:52] ⚠ Word Search: slot ends (6/6) — next 23h 32m
+[2026-09-29 03:09:52] ⚠ Snake: slot ends (6/6) — next 23h 38m
+[2026-09-29 03:09:52] ⚠ Leaf Shooter: slot ends (6/6) — next 23h 44m
+[2026-09-29 03:09:52] ℹ ▶ Block Breaker playing... (slots 1/6)
+[2026-09-29 03:13:22] ✔ auth ✓ Abdur081 · 🌿 12415 leaf · role=USER
+[2026-09-29 03:13:22] ℹ ⏳ পরের mine 3m 07s পরে (03:16)
+[2026-09-29 03:13:36] ⚠ ADEXIUM #6: Something went wrong — please reopen Leaf
+[2026-09-29 03:13:37] ℹ LINK ↳ land 200 https://hai8g.com/4/11808215
+[2026-09-29 03:13:37] ℹ LINK ↳ redir 200 https://hai8g.com/partitial/5117867?var=11808215&ab2r=0&rhd=false&sf=1
+[2026-09-29 03:13:37] ℹ LINK ↳ land2 200 https://nennne.cc/
+[2026-09-29 03:13:50] ⚠ LINK "Click & Earn" 1/3: Something went wrong — please reopen Leaf
+[2026-09-29 03:14:15] ✔ quick ADSGRAM_LINK +100 ✓ (bal 12515)
+[2026-09-29 03:14:31] ✔ adcrack শেষ — views ✓0, claims ✓1
+[2026-09-29 03:14:31] ⚠ Tic-Tac-Toe: slot ends (6/6) — next 23h 25m
+[2026-09-29 03:14:31] ⚠ Word Search: slot ends (6/6) — next 23h 27m
+[2026-09-29 03:14:31] ⚠ Snake: slot ends (6/6) — next 23h 33m
+[2026-09-29 03:14:32] ⚠ Leaf Shooter: slot ends (6/6) — next 23h 40m
+[2026-09-29 03:14:32] ℹ ▶ Block Breaker playing... (slots 2/6)
+[2026-09-29 03:18:04] ✔ auth ✓ Abdur081 · 🌿 12515 leaf · role=USER
+[2026-09-29 03:18:04] ℹ → MINE (tap 20/25) ...
+[2026-09-29 03:18:16] ✔ mine ✓ +12 pts (1 divisor) · 249/300 pts · next 03:58
+[2026-09-29 14:36:42] ℹ adview "Watch Ads & Earn #1" (ADSGRAM) — 7 ভিউ
+[2026-09-29 14:36:57] ✔ Watch Ads & Earn #1 1/7  ✅ +200 (base 200, div 1, tap 1/1 → FULL ✓) bal=12815
+[2026-09-29 14:37:14] ✔ Watch Ads & Earn #1 2/7  ✅ +150 (base 150, div 1, tap 1/1 → FULL ✓) bal=12965
+[2026-09-29 14:37:31] ✔ Watch Ads & Earn #1 3/7  ✅ +100 (base 100, div 1, tap 1/1 → FULL ✓) bal=13065
+[2026-09-29 14:37:48] ✔ Watch Ads & Earn #1 4/7  ✅ +70 (base 70, div 1, tap 1/1 → FULL ✓) bal=13135
+[2026-09-29 14:38:06] ✔ Watch Ads & Earn #1 5/7  ✅ +60 (base 60, div 1, tap 1/1 → FULL ✓) bal=13195
+[2026-09-29 14:38:24] ✔ Watch Ads & Earn #1 6/7  ✅ +50 (base 50, div 1, tap 1/1 → FULL ✓) bal=13245
+[2026-09-29 14:38:42] ✔ Watch Ads & Earn #1 7/7  ✅ +50 (base 50, div 1, tap 1/1 → FULL ✓) bal=13295
+[2026-09-29 14:38:44] ℹ adview "Watch Ads & Earn #2" (MONETAG) — 10 ভিউ
+[2026-09-29 14:38:59] ✔ Watch Ads & Earn #2 1/10  ✅ +100 (base 100, div 1, tap 0/0 → FULL ✓) bal=13395
+[2026-09-29 14:39:17] ✔ Watch Ads & Earn #2 2/10  ✅ +90 (base 90, div 1, tap 0/0 → FULL ✓) bal=13485
+[2026-09-29 14:39:34] ✔ Watch Ads & Earn #2 3/10  ✅ +80 (base 80, div 1, tap 0/0 → FULL ✓) bal=13565
+[2026-09-29 14:39:51] ✔ Watch Ads & Earn #2 4/10  ✅ +70 (base 70, div 1, tap 0/0 → FULL ✓) bal=13635
+[2026-09-29 14:40:08] ✔ Watch Ads & Earn #2 5/10  ✅ +60 (base 60, div 1, tap 0/0 → FULL ✓) bal=13695
+[2026-09-29 14:40:26] ✔ Watch Ads & Earn #2 6/10  ✅ +50 (base 50, div 1, tap 0/0 → FULL ✓) bal=13745
+[2026-09-29 14:40:43] ✔ Watch Ads & Earn #2 7/10  ✅ +40 (base 40, div 1, tap 0/0 → FULL ✓) bal=13785
+[2026-09-29 14:41:01] ✔ Watch Ads & Earn #2 8/10  ✅ +30 (base 30, div 1, tap 0/0 → FULL ✓) bal=13815
+[2026-09-29 14:41:20] ✔ Watch Ads & Earn #2 9/10  ✅ +20 (base 20, div 1, tap 0/0 → FULL ✓) bal=13835
+[2026-09-29 14:41:39] ✔ Watch Ads & Earn #2 10/10  ✅ +10 (base 10, div 1, tap 0/0 → FULL ✓) bal=13845
+[2026-09-29 14:41:56] ⚠ ADEXIUM #6: Something went wrong — please reopen Leaf
+[2026-09-29 14:41:56] ℹ LINK ↳ land 200 https://hai8g.com/4/11808215
+[2026-09-29 14:41:57] ℹ LINK ↳ redir 200 https://hai8g.com/partitial/5117867?var=11808215&ab2r=0&rhd=false&sf=1
+[2026-09-29 14:41:57] ℹ LINK ↳ land2 200 https://nennne.cc/
+[2026-09-29 14:42:10] ⚠ LINK "Click & Earn" 1/3: Something went wrong — please reopen Leaf
+[2026-09-29 14:42:37] ✔ quick ADSGRAM_LINK +100 ✓ (bal 13945)
+[2026-09-29 14:43:10] ✔ quick ADSGRAM_LINK +100 ✓ (bal 14045)
+[2026-09-29 14:43:34] ✔ quick ADSGRAM_LINK +100 ✓ (bal 14145)
+[2026-09-29 14:43:50] ✔ adcrack শেষ — views ✓17, claims ✓3
+[2026-09-29 14:45:08] ✔ auth ✓ Abdur081 · 🌿 14145 leaf · role=USER
+[2026-09-29 14:45:08] ℹ ⏳ পরের mine 27m 32s পরে (15:12)
+[2026-09-29 14:45:09] ✔ auth ✓ Abdur081 · 🌿 14145 leaf · role=USER
+[2026-09-29 14:45:09] ℹ ⏳ পরের mine 27m 31s পরে (15:12)
+[2026-09-29 14:45:14] ✔ auth ✓ Abdur081 · 🌿 14145 leaf · role=USER
+[2026-09-29 14:45:14] ⚠ Tic-Tac-Toe: slot ends (6/6) — next 11h 54m
+[2026-09-29 14:45:14] ⚠ Word Search: slot ends (6/6) — next 11h 57m
+[2026-09-29 14:45:14] ⚠ Snake: slot ends (6/6) — next 12h 03m
+[2026-09-29 14:45:14] ⚠ Leaf Shooter: slot ends (6/6) — next 12h 09m
+[2026-09-29 14:45:14] ℹ ▶ Block Breaker playing... (slots 3/6)
+[2026-09-29 14:45:39] ✔ auth ✓ Abdur081 · 🌿 14145 leaf · role=USER
+[2026-09-29 14:45:39] ℹ tasks: total=11 pending=5
+[2026-09-29 14:45:39] ℹ task "Add Leaf to your bio" (BIO) +200 · try 0/1
+[2026-09-29 14:45:43] ⚠ task "Add Leaf to your bio": bio doesn't have the link yet → Telegram bio-তে এই লাইনটা বসাও: 🍀 Best Earning Bot :- t.me/LeafEarnBot/app?startapp=1692540458
+[2026-09-29 14:45:44] ℹ ad-task "Watch Ads & Earn #3" (0/5) → adwatch সামলাবে
+[2026-09-29 14:45:46] ℹ task "Open Boinkers and win GRAM" (TELEGRAM) +80 · try 0/1
+[2026-09-29 14:45:51] ⚠ task "Open Boinkers and win GRAM": join the channel first → আগে জয়েন করো: https://t.me/boinker_bot/boinkapp?startapp=campLeaf_lesha
+[2026-09-29 14:45:52] ℹ task "Spin Boinkers slot 20 times" (OTHERS) +200 · try 0/1
+[2026-09-29 14:45:57] ⚠ task "Spin Boinkers slot 20 times": Couldn't verify with the partner right now — try again in a minute
+[2026-09-29 14:45:59] ℹ ad-task "Click & Earn" (0/3) → adwatch সামলাবে
+[2026-09-29 14:46:01] ℹ task summary: ok=0 fail=3 skip=2
+[2026-09-29 14:53:56] ✔ Block Breaker: game over — score=126280 reward=550 (ok)
+[2026-09-29 14:54:08] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 14:54:08] ✔ Block Breaker 🎉 claimed +550 leaf (base 550, divisor 1) · balance 14695
+[2026-09-29 14:54:11] ℹ ▶ Block Breaker playing... (slots 4/6)
+[2026-09-29 15:03:01] ✔ Block Breaker: game over — score=126280 reward=550 (ok)
+[2026-09-29 15:03:13] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 15:03:14] ✔ Block Breaker 🎉 claimed +550 leaf (base 550, divisor 1) · balance 15245
+[2026-09-29 15:03:17] ℹ ▶ Block Breaker playing... (slots 5/6)
+[2026-09-29 15:06:17] ✔ auth ✓ Abdur081 · 🌿 15245 leaf · role=USER
+[2026-09-29 15:06:17] ℹ ⏳ পরের mine 6m 23s পরে (15:12)
+[2026-09-29 15:12:04] ✔ Block Breaker: game over — score=126280 reward=550 (ok)
+[2026-09-29 15:12:16] ℹ ad simulated ✓ (render show click reward return)
+[2026-09-29 15:12:17] ✔ Block Breaker 🎉 claimed +550 leaf (base 550, divisor 1) · balance 15795
+[2026-09-29 15:12:21] ⚠ Block Breaker: slot ends (6/6) — next 11h 48m
+[2026-09-29 15:12:21] ℹ games summary: ok=3 fail=0 skip=5
+[2026-09-29 15:13:00] ✔ auth ✓ Abdur081 · 🌿 15795 leaf · role=USER
+[2026-09-29 15:13:00] ℹ → MINE (tap 25/25) ...
+[2026-09-29 15:13:12] ✔ mine ✓ +12 pts (1 divisor) · 309/300 pts · next 15:53
+[2026-09-29 15:13:13] ✔ auth ✓ Abdur081 · 🌿 15795 leaf · role=USER
+[2026-09-29 15:13:13] ℹ → CLAIM (Heart, 309/300 pts)...
+[2026-09-29 15:13:13] ✘ claim fail: FAILED_PRECONDITION not fully mined yet
+[2026-09-29 15:54:24] ✔ auth ✓ Abdur081 · 🌿 16295 leaf · role=USER
+[2026-09-29 15:54:25] ℹ → MINE (tap 26/26) ...
+[2026-09-29 15:54:37] ✔ mine ✓ +12 pts (1 divisor) · 321/312 pts · next 16:34
+[2026-09-29 15:54:41] ✔ auth ✓ Abdur081 · 🌿 16295 leaf · role=USER
+[2026-09-29 15:54:41] ℹ → CLAIM (Heart, 321/312 pts)...
+[2026-09-29 15:54:53] ✘ claim fail: সাপোর্ট অ্যাকাউন্টে একটা "Hi" পাঠান, তারপর আবার claim করুন।
+[2026-09-29 15:56:32] ✔ auth ✓ Abdur081 · 🌿 16295 leaf · role=USER
+[2026-09-29 15:56:32] ℹ → CLAIM (Heart, 321/312 pts)...
+[2026-09-29 15:56:45] ✘ claim fail: সাপোর্ট অ্যাকাউন্টে একটা "Hi" পাঠান, তারপর আবার claim করুন।
+[2026-09-29 15:57:00] ⚠ ADEXIUM #6: Something went wrong — please reopen Leaf
+[2026-09-29 15:57:00] ℹ LINK ↳ land 200 https://hai8g.com/4/11808215
+[2026-09-29 15:57:00] ℹ LINK ↳ redir 200 https://hai8g.com/partitial/5117867?var=11808215&ab2r=0&rhd=false&sf=1
+[2026-09-29 15:57:01] ℹ LINK ↳ land2 200 https://nennne.cc/
+[2026-09-29 15:57:14] ⚠ LINK "Click & Earn" 1/3: Something went wrong — please reopen Leaf
+[2026-09-29 15:57:27] ✔ adcrack শেষ — views ✓0, claims ✓0
+[2026-09-29 15:57:28] ⚠ Tic-Tac-Toe: slot ends (6/6) — next 10h 42m
+[2026-09-29 15:57:28] ⚠ Word Search: slot ends (6/6) — next 10h 44m
+[2026-09-29 15:57:28] ⚠ Snake: slot ends (6/6) — next 10h 50m
+[2026-09-29 15:57:28] ⚠ Leaf Shooter: slot ends (6/6) — next 10h 57m
+[2026-09-29 15:57:29] ⚠ Block Breaker: slot ends (6/6) — next 11h 03m
+[2026-09-29 15:57:29] ℹ games summary: ok=0 fail=0 skip=5
+[2026-09-29 15:57:30] ℹ tasks: total=11 pending=5
+[2026-09-29 15:57:30] ℹ task "Add Leaf to your bio" (BIO) +200 · try 0/1
+[2026-09-29 15:57:33] ⚠ task "Add Leaf to your bio": bio doesn't have the link yet → Telegram bio-তে এই লাইনটা বসাও: 🍀 Best Earning Bot :- t.me/LeafEarnBot/app?startapp=1692540458
+[2026-09-29 15:57:35] ℹ ad-task "Watch Ads & Earn #3" (0/5) → adwatch সামলাবে
+[2026-09-29 15:57:37] ℹ task "Open Boinkers and win GRAM" (TELEGRAM) +80 · try 0/1
+[2026-09-30 11:40:13] ✔ auth ✓ Abdur081 · 🌿 18845 leaf · role=USER
+[2026-09-30 11:40:13] ℹ → CLAIM (Heart, 321/312 pts)...
+[2026-09-30 11:40:13] ✘ claim fail: Telegram এই মুহূর্তে গিফট পাঠাতে পারেনি — পরে আবার চেষ্টা করুন।
+[2026-09-30 11:40:16] ✔ auth ✓ Abdur081 · 🌿 18845 leaf · role=USER
+[2026-09-30 11:40:17] ℹ → SPIN ...
+[2026-09-30 11:40:32] ✔ spin ✓ slice=2 +500 leaf · balance=19345 · পরের spin 24h 00m পরে
+[2026-09-30 11:40:33] ✔ auth ✓ Abdur081 · 🌿 19345 leaf · role=USER
+[2026-09-30 11:40:33] ℹ tasks: total=11 pending=7
+[2026-09-30 11:40:33] ℹ ad-task "Watch Ads & Earn #1" (0/7) → adwatch সামলাবে
+[2026-09-30 11:40:35] ℹ task "Add Leaf to your bio" (BIO) +200 · try 0/1
+[2026-09-30 11:40:38] ⚠ task "Add Leaf to your bio": bio doesn't have the link yet → Telegram bio-তে এই লাইনটা বসাও: 🍀 Best Earning Bot :- t.me/LeafEarnBot/app?startapp=1692540458
+[2026-09-30 11:40:41] ℹ ad-task "Watch Ads & Earn #2" (0/10) → adwatch সামলাবে
+[2026-09-30 11:40:43] ℹ ad-task "Watch Ads & Earn #3" (0/5) → adwatch সামলাবে
+[2026-09-30 11:40:46] ℹ task "Open Boinkers and win GRAM" (TELEGRAM) +80 · try 0/1
+[2026-09-30 11:40:50] ⚠ task "Open Boinkers and win GRAM": join the channel first → আগে জয়েন করো: https://t.me/boinker_bot/boinkapp?startapp=campLeaf_lesha
+[2026-09-30 11:40:52] ℹ task "Spin Boinkers slot 20 times" (OTHERS) +200 · try 0/1
+[2026-09-30 11:40:56] ⚠ task "Spin Boinkers slot 20 times": Spin slot atleast 20 times
+[2026-09-30 11:40:58] ℹ ad-task "Click & Earn" (0/3) → adwatch সামলাবে
+[2026-09-30 11:41:00] ℹ task summary: ok=0 fail=3 skip=4
+[2026-09-30 11:41:04] ℹ adview "Watch Ads & Earn #1" (ADSGRAM) — 7 ভিউ
+[2026-09-30 11:41:19] ✔ Watch Ads & Earn #1 1/7  ✅ +200 (base 200, div 1, tap 1/1 → FULL ✓) bal=19545
+[2026-09-30 11:41:36] ✔ Watch Ads & Earn #1 2/7  ✅ +150 (base 150, div 1, tap 1/1 → FULL ✓) bal=19695
+[2026-09-30 11:41:54] ✔ Watch Ads & Earn #1 3/7  ✅ +100 (base 100, div 1, tap 1/1 → FULL ✓) bal=19795
+[2026-09-30 11:42:11] ✔ Watch Ads & Earn #1 4/7  ✅ +70 (base 70, div 1, tap 1/1 → FULL ✓) bal=19865
+[2026-09-30 11:42:29] ✔ Watch Ads & Earn #1 5/7  ✅ +60 (base 60, div 1, tap 1/1 → FULL ✓) bal=19925
+[2026-09-30 11:57:07] ℹ adview "Watch Ads & Earn #1" (ADSGRAM) — 2 ভিউ
+[2026-09-30 11:57:38] ✔ Watch Ads & Earn #1 1/2  ✅ +50 (base 50, div 1, tap 1/1 → FULL ✓) bal=20025
+[2026-09-30 11:57:55] ✔ Watch Ads & Earn #1 2/2  ✅ +50 (base 50, div 1, tap 1/1 → FULL ✓) bal=20075
+[2026-09-30 11:57:57] ℹ adview "Watch Ads & Earn #2" (MONETAG) — 10 ভিউ
+[2026-09-30 11:58:13] ✔ Watch Ads & Earn #2 1/10  ✅ +100 (base 100, div 1, tap 0/0 → FULL ✓) bal=20175
+[2026-09-30 11:58:29] ✔ Watch Ads & Earn #2 2/10  ✅ +90 (base 90, div 1, tap 0/0 → FULL ✓) bal=20265
+[2026-09-30 11:58:47] ✔ Watch Ads & Earn #2 3/10  ✅ +80 (base 80, div 1, tap 0/0 → FULL ✓) bal=20345
+[2026-09-30 11:59:05] ✔ Watch Ads & Earn #2 4/10  ✅ +70 (base 70, div 1, tap 0/0 → FULL ✓) bal=20415
+[2026-09-30 11:59:23] ✔ Watch Ads & Earn #2 5/10  ✅ +60 (base 60, div 1, tap 0/0 → FULL ✓) bal=20475
+[2026-09-30 11:59:42] ✔ Watch Ads & Earn #2 6/10  ✅ +50 (base 50, div 1, tap 0/0 → FULL ✓) bal=20525
+[2026-09-30 11:59:59] ✔ Watch Ads & Earn #2 7/10  ✅ +40 (base 40, div 1, tap 0/0 → FULL ✓) bal=20565
+[2026-09-30 12:00:17] ✔ Watch Ads & Earn #2 8/10  ✅ +30 (base 30, div 1, tap 0/0 → FULL ✓) bal=20595
+[2026-09-30 12:03:25] ✔ Watch Ads & Earn #2 9/10  ✅ +20 (base 20, div 1, tap 0/0 → FULL ✓) bal=20665
+[2026-09-30 12:03:44] ✔ Watch Ads & Earn #2 10/10  ✅ +10 (base 10, div 1, tap 0/0 → FULL ✓) bal=20675
+[2026-10-02 10:23:26] ℹ adview "Watch Ads & Earn #1" (ADSGRAM) — 7 ভিউ
+[2026-10-02 10:23:41] ✔ Watch Ads & Earn #1 1/7  ✅ +120 (base 120, div 1, tap 1/1 → FULL ✓) bal=195
+[2026-10-02 10:23:58] ✔ Watch Ads & Earn #1 2/7  ✅ +100 (base 100, div 1, tap 1/1 → FULL ✓) bal=295
+[2026-10-02 10:24:16] ✔ Watch Ads & Earn #1 3/7  ✅ +90 (base 90, div 1, tap 1/1 → FULL ✓) bal=385
+[2026-10-02 10:24:33] ✔ Watch Ads & Earn #1 4/7  ✅ +80 (base 80, div 1, tap 1/1 → FULL ✓) bal=465
+[2026-10-02 10:24:51] ✔ Watch Ads & Earn #1 5/7  ✅ +70 (base 70, div 1, tap 1/1 → FULL ✓) bal=535
+[2026-10-02 10:25:09] ✔ Watch Ads & Earn #1 6/7  ✅ +60 (base 60, div 1, tap 1/1 → FULL ✓) bal=595
+[2026-10-02 10:25:28] ✔ Watch Ads & Earn #1 7/7  ✅ +50 (base 50, div 1, tap 1/1 → FULL ✓) bal=645
+[2026-10-02 10:25:30] ℹ adview "Watch Ads & Earn #2" (MONETAG) — 10 ভিউ
+[2026-10-02 10:25:46] ✔ Watch Ads & Earn #2 1/10  ✅ +100 (base 100, div 1, tap 0/0 → FULL ✓) bal=745
+[2026-10-02 10:26:03] ✔ Watch Ads & Earn #2 2/10  ✅ +90 (base 90, div 1, tap 0/0 → FULL ✓) bal=835
+[2026-10-02 10:26:21] ✔ Watch Ads & Earn #2 3/10  ✅ +80 (base 80, div 1, tap 0/0 → FULL ✓) bal=915
+[2026-10-02 10:26:38] ✔ Watch Ads & Earn #2 4/10  ✅ +70 (base 70, div 1, tap 0/0 → FULL ✓) bal=985
+[2026-10-02 10:26:56] ✔ Watch Ads & Earn #2 5/10  ✅ +60 (base 60, div 1, tap 0/0 → FULL ✓) bal=1045
+[2026-10-02 10:27:14] ✔ Watch Ads & Earn #2 6/10  ✅ +50 (base 50, div 1, tap 0/0 → FULL ✓) bal=1095
+[2026-10-02 10:27:31] ✔ Watch Ads & Earn #2 7/10  ✅ +40 (base 40, div 1, tap 0/0 → FULL ✓) bal=1135
+[2026-10-02 10:27:49] ✔ Watch Ads & Earn #2 8/10  ✅ +30 (base 30, div 1, tap 0/0 → FULL ✓) bal=1165
+[2026-10-02 10:28:06] ✔ Watch Ads & Earn #2 9/10  ✅ +20 (base 20, div 1, tap 0/0 → FULL ✓) bal=1185
+[2026-10-02 10:28:24] ✔ Watch Ads & Earn #2 10/10  ✅ +10 (base 10, div 1, tap 0/0 → FULL ✓) bal=1195
+[2026-10-02 10:28:40] ⚠ ADEXIUM #6: Something went wrong — please reopen Leaf
+[2026-10-02 10:28:41] ℹ LINK ↳ land 200 https://hai8g.com/4/11808215
+[2026-10-02 10:28:41] ℹ LINK ↳ redir 200 https://hai8g.com/partitial/5117867?var=11808215&ab2r=0&rhd=false&sf=1
+[2026-10-02 10:28:41] ℹ LINK ↳ land2 200 https://nennne.cc/
+[2026-10-02 10:28:56] ⚠ LINK "Click & Earn" 1/3: Something went wrong — please reopen Leaf
+[2026-10-02 10:29:10] ✔ adcrack শেষ — views ✓17, claims ✓0
+[2026-10-02 10:29:49] ✔ auth ✓ Abdur081 · 🌿 1195 leaf · role=USER
+[2026-10-02 10:29:49] ✔ 🛡 Safety Check পাস — কাজ আবার চালু
+[2026-10-02 10:29:49] ℹ → PICK Teddy Bear (BEAR)
+[2026-10-02 10:29:49] ✘ pick fail: FAILED_PRECONDITION not enough leaf (এই গিফটের জন্য 5000 leaf লাগে — ব্যালেন্স কম হলে BEAR/HEART দাও)
+[2026-10-02 10:29:50] ℹ → SPIN ...
+[2026-10-02 10:52:05] ✔ auth ✓ Abdur081 · 🌿 2070 leaf · role=USER
+[2026-10-02 10:52:05] ✔ 🛡 Safety Check পাস — কাজ আবার চালু
+[2026-10-02 10:52:05] ℹ → PICK Teddy Bear (BEAR)
+[2026-10-02 10:52:05] ✘ pick fail: FAILED_PRECONDITION not enough leaf (এই গিফটের জন্য 5000 leaf লাগে — ব্যালেন্স কম হলে BEAR/HEART দাও)
+[2026-10-02 10:52:20] ⚠ ADEXIUM #6: Something went wrong — please reopen Leaf
+[2026-10-02 10:52:20] ℹ LINK ↳ land 200 https://hai8g.com/4/11808215
+[2026-10-02 10:52:21] ℹ LINK ↳ redir 200 https://hai8g.com/partitial/5117867?var=11808215&ab2r=0&rhd=false&sf=1
+[2026-10-02 10:52:21] ℹ LINK ↳ land2 200 https://nennne.cc/
