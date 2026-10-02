@@ -1,0 +1,21 @@
+
+[45m[1m  LEAF EARN MINER · MULTI  [0m
+[2026-09-29 14:45:14] [32m✔[0m auth ✓ Abdur081 · 🌿 14145 leaf · role=USER
+[2026-09-29 14:45:14] [33m⚠[0m Tic-Tac-Toe: slot ends (6/6) — next 11h 54m
+[2026-09-29 14:45:14] [33m⚠[0m Word Search: slot ends (6/6) — next 11h 57m
+[2026-09-29 14:45:14] [33m⚠[0m Snake: slot ends (6/6) — next 12h 03m
+[2026-09-29 14:45:14] [33m⚠[0m Leaf Shooter: slot ends (6/6) — next 12h 09m
+[2026-09-29 14:45:14] [36mℹ[0m ▶ Block Breaker playing... (slots 3/6)
+[2026-09-29 14:53:56] [32m✔[0m Block Breaker: game over — score=126280 reward=550 (ok)
+[2026-09-29 14:54:08] [36mℹ[0m ad simulated ✓ (render show click reward return)
+[2026-09-29 14:54:08] [32m✔[0m Block Breaker 🎉 claimed +550 leaf (base 550, divisor 1) · balance 14695
+[2026-09-29 14:54:11] [36mℹ[0m ▶ Block Breaker playing... (slots 4/6)
+[2026-09-29 15:03:01] [32m✔[0m Block Breaker: game over — score=126280 reward=550 (ok)
+[2026-09-29 15:03:13] [36mℹ[0m ad simulated ✓ (render show click reward return)
+[2026-09-29 15:03:14] [32m✔[0m Block Breaker 🎉 claimed +550 leaf (base 550, divisor 1) · balance 15245
+[2026-09-29 15:03:17] [36mℹ[0m ▶ Block Breaker playing... (slots 5/6)
+[2026-09-29 15:12:04] [32m✔[0m Block Breaker: game over — score=126280 reward=550 (ok)
+[2026-09-29 15:12:16] [36mℹ[0m ad simulated ✓ (render show click reward return)
+[2026-09-29 15:12:17] [32m✔[0m Block Breaker 🎉 claimed +550 leaf (base 550, divisor 1) · balance 15795
+[2026-09-29 15:12:21] [33m⚠[0m Block Breaker: slot ends (6/6) — next 11h 48m
+[2026-09-29 15:12:21] [36mℹ[0m games summary: ok=3 fail=0 skip=5
